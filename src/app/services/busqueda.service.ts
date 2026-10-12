@@ -4,7 +4,8 @@ import { environment } from '../../environments/environment';
 
 import { map } from 'rxjs/operators';
 import { User } from '../models/user';
-import { Cliente } from '../models/cliente';
+import { Retador } from '../models/retador';
+import { Comunicado } from '../models/comunicado';
 
 const base_url = environment.apiUrl;
 
@@ -43,22 +44,28 @@ export class BusquedasService {
 
   
   
-  private trasnformarClientes(resultados: any[]): Cliente[] {
+  private trasnformarParticipantes(resultados: any[]): Retador[] {
+    return resultados;
+  }
+  
+  private trasnformarComunicados(resultados: any[]): Comunicado[] {
     return resultados;
   }
   
  
   
 
-  buscar(tipo: 'usuarios'|'clientes' , termino: string) {
+  buscar(tipo: 'usuarios'|'participantes'| 'comunicados' , termino: string) {
     const url = `${base_url}/todo/coleccion/${tipo}/${termino}`;
     return this.http.get<any[]>(url, this.headers).pipe(
       map((resp: any) => {
         switch (tipo) {
           case 'usuarios':
             return this.trasnformarUsuarios(resp.resultados);
-          case 'clientes':
-            return this.trasnformarClientes(resp.resultados);
+          case 'participantes':
+            return this.trasnformarParticipantes(resp.resultados);
+          case 'comunicados':
+            return this.trasnformarComunicados(resp.resultados);
 
           default:
             return [];
@@ -67,17 +74,12 @@ export class BusquedasService {
     );
   }
 
-  searchGlobal(termino: string, estado?: string, tipo?:string) {
+  searchGlobal(termino: string,) {
     const url = `${base_url}/todo/${termino}`;
     
     // Configuramos los parámetros de la URL de forma limpia
     let params = new HttpParams();
-    if (estado) {
-        params = params.set('estado_seguimiento', estado);
-    }
-     if (tipo) {
-        params = params.set('tipoClinica', tipo);
-    }
+    
 
     // Pasamos los params dentro del objeto de configuración junto a los headers
     return this.http.get<any[]>(url, {
@@ -86,22 +88,5 @@ export class BusquedasService {
     });
 }
 
-searchByCollection(tabla: string, termino: string = '', estado?: string, tipo?:string) {
-    // Si el término va vacío, usamos un string por defecto o espacio para que Express no rompa la URL
-    const searchParam = termino.trim() === '' ? 'all' : termino;
-    const url = `${base_url}/todo/coleccion/${tabla}/${searchParam}`;
-    
-    let params = new HttpParams();
-    if (estado) {
-        params = params.set('estado_seguimiento', estado);
-    }
-    if (tipo) {
-        params = params.set('tipoClinica', tipo);
-    }
 
-    return this.http.get<any>(url, {
-        ...this.headers,
-        params
-    });
-}
 }

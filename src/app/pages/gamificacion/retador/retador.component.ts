@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { Retador } from 'src/app/models/retador';
 import { User } from 'src/app/models/user';
+import { BusquedasService } from 'src/app/services/busqueda.service';
 import { GamificacionService } from 'src/app/services/gamificacion.service';
+import Swal from 'sweetalert2';
 declare var bootstrap: any;
 @Component({
   selector: 'app-retador',
@@ -24,7 +26,14 @@ export class RetadorComponent {
   selectedRetador!: Retador | null; 
   usuario: any;
 
-  constructor(private participantesService: GamificacionService) {
+  public ejecutandoSorteo: boolean = false;
+public ganadoresSorteo: any = null; // Guardará el objeto de respuesta { sorteoId, ganadores, etc }
+public pushNotificado: boolean = false;
+
+  constructor(
+    private participantesService: GamificacionService,
+    private busquedasService: BusquedasService,
+  ) {
     let USER = localStorage.getItem('user');
     this.usuario = JSON.parse(USER ? USER : '');
   }
@@ -84,86 +93,43 @@ export class RetadorComponent {
     this.selectedRetador = null;
   }
 
-  search() {
-    // CASO 1: No hay término de búsqueda escrito en el input
-    // if (!this.query || this.query.trim() === '') {
-
-
-
-    //   // NUEVO Subcaso B: Seleccionó Tipo de Clínica Y Estado al mismo tiempo
-    //   // (Asegúrate de que tu servicio 'searchByCollection' acepte un 4to parámetro para tipoClinica)
-    //   if (this.selectedEstado && this.selectedtipoClinica) {
-    //     this.loading = true;
-    //     return this.busquedasService.searchByCollection('clientes', '', this.selectedEstado, this.selectedtipoClinica)
-    //       .subscribe((resp: any) => {
-    //         this.clientes = resp.resultados || [];
-    //         this.clienteService.emitFilteredClientes(this.clientes);
-    //         this.loading = false;
-    //       });
-    //   }
-
-    //   // Subcaso C: SÓLO hay tipo de clínica
-    //   else if (this.selectedtipoClinica) {
-    //     // OJO: Si el 3er parámetro es el estado, envía null/vacío antes de la clínica
-    //     this.loading = true;
-    //     return this.busquedasService.searchByCollection('clientes', '', null, this.selectedtipoClinica)
-    //       .subscribe((resp: any) => {
-    //         this.clientes = resp.resultados || [];
-    //         this.clienteService.emitFilteredClientes(this.clientes);
-    //         this.loading = false;
-    //       });
-    //   }
-
-    //   // Subcaso D: SÓLO hay un estado seleccionado
-    //   else if (this.selectedEstado) {
-    //     this.loading = true;
-    //     return this.busquedasService.searchByCollection('clientes', '', this.selectedEstado)
-    //       .subscribe((resp: any) => {
-    //         this.clientes = resp.resultados || [];
-    //         this.clienteService.emitFilteredClientes(this.clientes);
-    //         this.loading = false;
-    //       });
-    //   }
-
-    //   // Subcaso E: Sin filtros seleccionados
-    //   else {
-    //     this.ngOnInit();
-    //     return;
-    //   }
-    // }
-
-    // // CASO 2: Sí hay un término de búsqueda en el input de texto
-    // else {
-    //   this.loading = true; // Buena práctica activar el loading aquí también
-
-    //   // CORRECCIÓN: Pasamos this.query, luego el estado (si existe) y por último el tipo de clínica
-    //   return this.busquedasService.searchGlobal(this.query, this.selectedEstado, this.selectedtipoClinica)
-    //     .subscribe((resp: any) => {
-    //       // Ajusta 'resp.resultados' o 'resp.projects' según lo que devuelva tu backend en searchGlobal
-    //       let filteredProjects = resp.resultados || resp.clientes || [];
-
-    //       // Si además tenías el filtro de categoría (selectedType) en el frontend:
-    //       if (this.selectedType) {
-    //         filteredProjects = filteredProjects.filter(
-    //           (project: any) => project.category?.nombre === this.selectedType
-    //         );
-    //       }
-
-    //       this.clientes = filteredProjects;
-    //       this.clienteService.emitFilteredClientes(filteredProjects);
-    //       this.loading = false;
-    //     }, (error) => {
-    //       this.loading = false;
-    //       console.error(error);
-    //     });
-    // }
-
+  search(): void {
+  // CASO 1: Si el administrador borra el texto de la barra de búsqueda
+  if (!this.query || this.query.trim() === '') {
+    this.loading = true;
+    
+    // Restauramos el ranking original ordenado por puntaje de mayor a menor
+    this.participantesService.obtenerTablaLiderazgo().subscribe({
+      next: (data) => {
+        this.retadores = data; 
+        this.loading = false;
+        console.log('🔄 [BUSCADOR]: Barra limpia. Ranking de liderazgo restaurado.');
+      },
+      error: (err) => {
+        console.error('❌ Error al restaurar liderazgo:', err);
+        this.loading = false;
+      }
+    });
+    return;
   }
 
+  // CASO 2: Sí hay un término escrito en el input de texto
+  this.loading = true;
 
-
-
-
+  // 🟢 CONEXIÓN DIRECTA: Apunta a tu método unificado 'buscar' pasándole el tipo 'participantes'
+  this.busquedasService.buscar('participantes', this.query.trim()).subscribe({
+    next: (resultados: Retador[]) => {
+      // Tu .pipe(map) ya transformó la respuesta directamente en el arreglo limpio
+      this.retadores = resultados || [];
+      this.loading = false;
+      console.log(`🔍 [BUSCADOR]: Se filtraron ${this.retadores.length} retadores con el término: "${this.query}"`);
+    },
+    error: (err) => {
+      console.error('❌ Error en la petición analítica de búsqueda:', err);
+      this.loading = false;
+    }
+  });
+}
 
 
   PageSize() {
@@ -171,6 +137,74 @@ export class RetadorComponent {
     this.ngOnInit();
 
   }
+
+  /**
+ * 🎲 Ejecuta la lógica matemática de la ruleta de Coggle (1 de cada 5)
+ */
+lanzarSorteo() {
+  Swal.fire({
+    title: '¿Deseas iniciar el sorteo?',
+    text: "El sistema barajará de forma aleatoria pura a los participantes clasificados.",
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonColor: '#2ecc71',
+    cancelButtonColor: '#858796',
+    confirmButtonText: '¡Sí, girar ruleta!'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.ejecutandoSorteo = true;
+      this.ganadoresSorteo = null;
+      this.pushNotificado = false;
+
+      this.participantesService.ejecutarSorteoProporcional().subscribe({
+        next: (resp) => {
+          if (resp.ok) {
+            this.ganadoresSorteo = resp.data;
+            this.ejecutandoSorteo = false;
+            
+            Swal.fire({
+              icon: 'success',
+              title: '¡Sorteo Completado! 🏆',
+              text: `Se han seleccionado ${resp.data.cantidadGanadores} ganadores de ${resp.data.totalElegibles} elegibles.`,
+              timer: 3000,
+              showConfirmButton: false
+            });
+          }
+        },
+        error: (err) => {
+          console.error(err);
+          this.ejecutandoSorteo = false;
+          Swal.fire('Error', err.error?.msg || 'No se pudo procesar el sorteo. Verifica que existan usuarios clasificados (≥ 55 pts).', 'error');
+        }
+      });
+    }
+  });
+}
+
+/**
+ * 🎁 Botón CTA para notificar exclusivamente a los ganadores mediante WebPush
+ */
+notificarGanadoresPush() {
+  if (!this.ganadoresSorteo?.sorteoId) return;
+
+  Swal.fire({
+    title: 'Enviando alertas...',
+    didOpen: () => { Swal.showLoading(); }
+  });
+
+  this.participantesService.notificarGanadores(this.ganadoresSorteo.sorteoId).subscribe({
+    next: (resp) => {
+      if (resp.ok) {
+        this.pushNotificado = true;
+        Swal.fire('¡Notificados! ⚡', 'Los banners push flotantes han sido enviados a las pantallas de los ganadores.', 'success');
+      }
+    },
+    error: (err) => {
+      console.error(err);
+      Swal.fire('Error de despacho', 'No se pudieron enviar las notificaciones push.', 'error');
+    }
+  });
+}
 
   
 

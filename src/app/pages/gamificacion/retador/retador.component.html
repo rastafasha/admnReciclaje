@@ -9,28 +9,27 @@
                 <div class="col-xs-12">
                     <!-- buscador -->
                     <form class="form-horizontal ">
-                            <div
-                                class="p-1 bg-light rounded rounded-pill shadow-sm mb-4 d-flex justify-content-center gap-3">
-                                <div class="input-group busc">
-                                    <input type="search" name="search" type="text" class="form-control inputb "
-                                        placeholder="Buscar Cliente por nombre, teléfono ó correo" aria-describedby="button-addon1"
-                                        [(ngModel)]="query" class="form-control border-0 bg-light" />
+                        <div
+                            class="p-1 bg-light rounded rounded-pill shadow-sm mb-4 d-flex justify-content-center gap-3">
+                            <div class="input-group busc">
+                                <input type="search" name="search" type="text" class="form-control inputb "
+                                    placeholder="Buscar Cliente por nombre, teléfono ó correo"
+                                    aria-describedby="button-addon1" [(ngModel)]="query"
+                                    class="form-control border-0 bg-light" />
 
-                                   
-                                    <div class="input-group-append ">
-                                        <button id="button-addon1" type="submit" class="btn btn-link text-primary"
-                                            (click)="search()" name="submit" data-toggle="tooltip"
-                                            title="mostrar todos">
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                        <a href="javascript:;" (click)="PageSize()"
-                                            class="btn btn-primary doctor-refresh ms-2 "><i
-                                                class="fa fa-refresh"></i></a>
-                                    </div>
+
+                                <div class="input-group-append ">
+                                    <button id="button-addon1" type="submit" class="btn btn-link text-primary"
+                                        (click)="search()" name="submit" data-toggle="tooltip" title="mostrar todos">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <a href="javascript:;" (click)="PageSize()"
+                                        class="btn btn-primary doctor-refresh ms-2 "><i class="fa fa-refresh"></i></a>
                                 </div>
-
                             </div>
-                        </form>
+
+                        </div>
+                    </form>
                     <!-- buscador -->
                 </div>
             </div>
@@ -141,6 +140,103 @@
                         </table>
                     </div>
 
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-lg-12">
+                    <div class="card shadow border-0 rounded-lg overflow-hidden mb-4">
+
+                        <!-- CABECERA DEL PANEL DEL SORTEO -->
+                        <div
+                            class="card-header py-3 bg-light border-0 d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="m-0 font-weight-bold text-gray-800"><i
+                                        class="fas fa-dice text-success mr-2"></i>Módulo de Sorteo Dinámico</h5>
+                                <p class="text-muted small mb-0 mt-1">1 ganador por cada 5 participantes elegibles (≥ 55 pts).</p>
+                            </div>
+                            <!-- BOTÓN DISPARADOR PRINCIPAL -->
+                            <button class="btn btn-success px-4 font-weight-bold shadow-sm"
+                                [disabled]="ejecutandoSorteo || loading" (click)="lanzarSorteo()">
+                                <i class="fas fa-play-circle mr-1" [class.fa-spin]="ejecutandoSorteo"></i> Ejecutar
+                                Ruleta
+                            </button>
+                        </div>
+
+                        <!-- CUERPO DE ACCIÓN -->
+                        <div class="card-body p-4 text-center">
+
+                            <!-- EFECTO DE ESPERA / ANIMACIÓN DE RULETA -->
+                            <div *ngIf="ejecutandoSorteo"
+                                class="py-5 animate__animated animate__pulse animate__infinite">
+                                <i class="fas fa-sync-alt fa-3x text-success fa-spin mb-3"></i>
+                                <h5 class="font-weight-bold text-gray-800">Barajando pool de clasificados...</h5>
+                                <p class="text-muted small">Seleccionando ganadores mediante algoritmo puro aleatorio
+                                    Fisher-Yates.</p>
+                            </div>
+
+                            <!-- ESTADO VACÍO (INICIAL) -->
+                            <div *ngIf="!ejecutandoSorteo && !ganadoresSorteo" class="py-4 text-muted small">
+                                <i class="fas fa-trophy fa-2x text-gray-300 mb-2 d-block"></i>
+                                Presiona el botón de <strong>Ejecutar Ruleta</strong> para extraer de forma automática y
+                                aleatoria a los ganadores de este período.
+                            </div>
+
+                            <!-- 🌟 CONTENEDOR DE RESULTADOS (GANADORES SELECCIONADOS) -->
+                            <div *ngIf="!ejecutandoSorteo && ganadoresSorteo" class="animate__animated animate__fadeIn">
+
+                                <div
+                                    class="alert alert-success border-0 rounded-lg p-3 text-left d-flex justify-content-between align-items-center mb-4">
+                                    <div>
+                                        <h6 class="font-weight-bold mb-1 text-success"><i
+                                                class="fas fa-check-circle mr-1"></i> ¡Sorteo Procesado y Guardado
+                                            Correctamente!</h6>
+                                        <p class="small mb-0 text-muted">Se extrajeron <strong>{{
+                                                ganadoresSorteo.cantidadGanadores }}</strong> ganadores de un universo
+                                            de <strong>{{ ganadoresSorteo.totalElegibles }}</strong> retadores
+                                            calificados.</p>
+                                    </div>
+
+                                    <!-- 🎁 BOTÓN CTA EXCLUSIVO DE COGGLE PARA NOTIFICAR -->
+                                    <button class="btn btn-primary font-weight-bold shadow-sm"
+                                        [disabled]="pushNotificado" (click)="notificarGanadoresPush()">
+                                        <i class="fas fa-bell mr-1"></i>
+                                        {{ pushNotificado ? 'Ganadores Notificados ✓' : 'Notificar Ganadores (WebPush)'
+                                        }}
+                                    </button>
+                                </div>
+
+                                <!-- REJILLA DE TARJETAS DE GANADORES -->
+                                <div class="row g-3 justify-content-center">
+                                    <div class="col-md-4" *ngFor="let ganador of ganadoresSorteo.ganadores">
+                                        <div
+                                            class="card bg-light border-0 shadow-sm rounded-lg p-3 position-relative overflow-hidden text-left border-top-4 border-success">
+
+                                            <div class="position-absolute top-0 right-0 p-3 opacity-10">
+                                                <i class="fas fa-award fa-4x text-success"></i>
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="icon-circle bg-soft-success-icon mr-2">
+                                                    <i class="fas fa-user-crown text-success"></i>
+                                                </div>
+                                                <h6 class="font-weight-bold text-gray-900 mb-0">{{ ganador.username }}
+                                                </h6>
+                                            </div>
+
+                                            <p class="text-muted small mb-1"><i class="fas fa-envelope mr-1"></i> {{
+                                                ganador.email }}</p>
+                                            <p class="text-muted small mb-0"><i class="fas fa-id-card mr-1"></i> ID: {{
+                                                ganador.identificacion || 'N/A' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
                 </div>
             </div>
 

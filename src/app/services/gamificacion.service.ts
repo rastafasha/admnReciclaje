@@ -9,7 +9,7 @@ import { APIResponseLeaderboard, Retador } from '../models/retador';
   providedIn: 'root'
 })
 export class GamificacionService {
-// Asumiendo una estructura base de URL de tu API
+  // Asumiendo una estructura base de URL de tu API
   private apiUrl = `${environment.apiUrl}/gamificacion`;
 
   constructor(private http: HttpClient) { }
@@ -41,22 +41,38 @@ export class GamificacionService {
  * 🟢 OBTENER MÉTRICAS GLOBALES DEL DASHBOARD ECOLÓGICO
  * GET: /api/gamificacion/dashboard-metricas
  */
-obtenerMetricasDashboard(): Observable<{
-  totalParticipantes: number;
-  totalHabitosCompletados: number;
-  puntosTotalesGlobales: number;
-  puntosActualesGlobales: number;
-  clasificadosSorteo: number;
-}> {
-  return this.http.get<{ success: boolean; data: any }>(`${this.apiUrl}/dashboard-metricas`, this.headers).pipe(
-    map(response => response.data)
-  );
-}
+  obtenerMetricasDashboard(): Observable<{
+    totalParticipantes: number;
+    totalHabitosCompletados: number;
+    puntosTotalesGlobales: number;
+    puntosActualesGlobales: number;
+    clasificadosSorteo: number;
+  }> {
+    return this.http.get<{ success: boolean; data: any }>(`${this.apiUrl}/dashboard-metricas`, this.headers).pipe(
+      map(response => response.data)
+    );
+  }
 
   /**
    * Gatilla el algoritmo del sorteo en el backend para extraer los ganadores aleatorios
    */
   ejecutarSorteo(): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/sorteo`, {});
+  }
+
+  /**
+ * 🎲 GATILLO DEL SORTEO PROPORCIONAL AUTOMÁTICO
+ * POST: /api/gamificacion/ejecutar-sorteo
+ */
+  ejecutarSorteoProporcional(): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/ejecutar-sorteo`, {}, this.headers);
+  }
+
+  /**
+   * 🎁 BOTÓN CTA: DISPARAR NOTIFICACIÓN PUSH EXCLUSIVA A LOS GANADORES SENSORIZADOS
+   * POST: /api/gamificacion/notificar-ganadores
+   */
+  notificarGanadores(sorteoId: string): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/notificar-ganadores`, { sorteoId }, this.headers);
   }
 }
