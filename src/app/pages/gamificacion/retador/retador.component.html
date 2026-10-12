@@ -1,0 +1,155 @@
+<div class="container animated fadeInUp" id="main" class="main" role="main" name="users">
+
+    <div class="col-xs-12">
+        <app-backButtn [displaycomponent]="displaycomponent" [title]="'Tabla de Liderazgo - Retadores'"></app-backButtn>
+        <div class="clear"></div>
+        <p class="text-muted small mb-0">Gestión de posiciones y clasificados al sorteo</p>
+        <section class="section dashboard">
+            <div class="row">
+                <div class="col-xs-12">
+                    <!-- buscador -->
+                    <form class="form-horizontal ">
+                            <div
+                                class="p-1 bg-light rounded rounded-pill shadow-sm mb-4 d-flex justify-content-center gap-3">
+                                <div class="input-group busc">
+                                    <input type="search" name="search" type="text" class="form-control inputb "
+                                        placeholder="Buscar Cliente por nombre, teléfono ó correo" aria-describedby="button-addon1"
+                                        [(ngModel)]="query" class="form-control border-0 bg-light" />
+
+                                   
+                                    <div class="input-group-append ">
+                                        <button id="button-addon1" type="submit" class="btn btn-link text-primary"
+                                            (click)="search()" name="submit" data-toggle="tooltip"
+                                            title="mostrar todos">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <a href="javascript:;" (click)="PageSize()"
+                                            class="btn btn-primary doctor-refresh ms-2 "><i
+                                                class="fa fa-refresh"></i></a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    <!-- buscador -->
+                </div>
+            </div>
+            <app-loading *ngIf="loading"></app-loading>
+
+            <!-- TABLA DE LIDERAZGO / CONTENEDOR PRINCIPAL -->
+            <div class="card shadow border-0 rounded-lg overflow-hidden">
+                <div class="card-body p-0">
+
+                    <!-- SPINNER DE CARGA COMPONENTE PADRE -->
+                    <div *ngIf="loading" class="d-flex justify-content-center align-items-center py-5 my-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Cargando participantes...</span>
+                        </div>
+                    </div>
+
+                    <!-- TABLA FÍSICA -->
+                    <div *ngIf="!loading" class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light-eco text-gray-700 text-uppercase font-weight-bold small">
+                                <tr>
+                                    <th class="px-4 py-3 text-center" style="width: 80px;">Posición</th>
+                                    <th class="py-3">Usuario / Participante</th>
+                                    <th class="py-3">Identificación</th>
+                                    <th class="py-3 text-center">Hábitos Completados</th>
+                                    <th class="py-3 text-center">Puntos Totales</th>
+                                    <th class="py-3 text-center">Puntos Actuales</th>
+                                    <th class="py-3 text-center" style="width: 150px;">Estado Sorteo</th>
+                                    <th class="px-4 py-3 text-center" style="width: 100px;">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Iteración limpia con tu directiva estándar de paginación o un ngFor regular -->
+                                <tr *ngFor="let retador of retadores; let i = index"
+                                    [ngClass]="{'fila-clasificada': esClasificado(retador)}">
+
+                                    <!-- POSICIÓN EN EL RANKING -->
+                                    <td class="text-center font-weight-bold text-gray-600 px-4">
+                                        #{{ i + 1 }}
+                                    </td>
+
+                                    <!-- USUARIO CON AVATAR RELACIONAL -->
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-container mr-3">
+                                                <!-- Usamos el método get imagenUrl definido en tu clase IPerfil -->
+                                                <img [src]="retador.profile?.avatar_url|imagenPipe:'perfiles'"
+                                                    class="rounded-circle avatar-table border shadow-sm" alt="Avatar">
+                                            </div>
+                                            <div>
+                                                <div class="font-weight-bold text-gray-900 mb-0">{{ retador.username }}
+                                                </div>
+                                                <span class="text-muted small">{{ retador.email }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- IDENTIFICACIÓN -->
+                                    <td class="text-muted font-mono small">
+                                        {{ retador.identificacion || 'N/A' }}
+                                    </td>
+
+                                    <!-- HÁBITOS COMPLETADOS -->
+                                    <td class="text-center font-weight-bold text-info">
+                                        {{ retador.profile?.habitosCompletados || 0 }}
+                                    </td>
+
+                                    <!-- HISTÓRICO ACUMULADO -->
+                                    <td class="text-center text-secondary font-weight-bold">
+                                        {{ retador.profile?.puntos_totales || 0 }} pts
+                                    </td>
+
+                                    <!-- PUNTOS ACTUALES (ELEGIBILIDAD) -->
+                                    <td class="text-center">
+                                        <span class="badge badge-pill font-weight-bold px-3 py-2"
+                                            [ngClass]="esClasificado(retador) ? 'badge-eco-points' : 'badge-light-points'">
+                                            {{ retador.profile?.puntos_actuales || 0 }} pts
+                                        </span>
+                                    </td>
+
+                                    <!-- BADGE EN VERDE RESALTADO SI ESTÁ CLASIFICADO (>= 55 PTS) -->
+                                    <td class="text-center">
+                                        <span *ngIf="esClasificado(retador)" class="badge-status-eco">
+                                            <i class="fas fa-check-circle mr-1"></i> Clasificado
+                                        </span>
+                                        <span *ngIf="!esClasificado(retador)" class="badge-status-pending">
+                                            <i class="fas fa-times-circle mr-1"></i> Falta Puntaje
+                                        </span>
+                                    </td>
+
+                                    <!-- BOTÓN DE ACCIÓN ACCESO AL MODAL HIJO -->
+                                    <td class="text-center px-4">
+                                        <button class="btn btn-action-view btn-sm btn-circle shadow-sm"
+                                            (click)="onViewRetador(retador)" title="Ver detalles e historial">
+                                            <i class="fas fa-eye text-primary"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                <!-- MENSAJE FEEDBACK SI LA TABLA VIENE VACÍA -->
+                                <tr *ngIf="retadores.length === 0">
+                                    <td colspan="8" class="text-center py-5 text-muted">
+                                        <i class="fas fa-users-slash fa-2x mb-3 d-block text-gray-400"></i>
+                                        No se encontraron retadores registrados en este módulo.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+
+
+<!-- COMPONENTE HIJO (MODAL DE DETALLE) -->
+<!-- Aquí inyectamos por @Input al hijo cuando se pulse el botón de ver -->
+<app-retador-detalle [retador]="selectedRetador" (onClose)="onCloseModal()"></app-retador-detalle>

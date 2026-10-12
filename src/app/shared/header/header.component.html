@@ -11,7 +11,7 @@
                 <!-- Logo icon --><b>
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                     <!-- Dark Logo icon -->
-                    <img src="assets/svg/logo.svg" style="height:50px" alt="homepage" class="dark-logo" />
+                    <img src="assets/svg/logotipo.svg" style="height:50px" alt="homepage" class="dark-logo" />
                     <!-- Light Logo icon -->
                     <img src="assets/svg/logopi_piblanco.svg" style="height:50px" alt="homepage" class="light-logo" />
                 </b>
@@ -19,7 +19,7 @@
                 <!-- Logo text -->
                  <span>
                     <!-- dark Logo text -->
-                     <h1>ADMIN CRM</h1>
+                     <h1>ADMIN </h1>
                     <!-- <img src="assets/svg/logo_letrasAdminColor.svg" style="height:20px" alt="homepage"
                         class="dark-logo logot-text" />
                    
@@ -84,37 +84,52 @@
                         <!-- LISTA DESPLEGABLE DINÁMICA -->
                         <div style="max-height: 280px; overflow-y: auto;">
 
-                            <!-- Caso A: Recorriendo las alertas vivas de MongoDB -->
-                            <li *ngFor="let alerta of alertasCampana">
-                                <a class="dropdown-item p-3 border-bottom d-flex align-items-start gap-2 text-wrap"
-                                    (click)="clickMarcarLeida(alerta)" style="transition: background 0.2s ease;">
-                                    <!-- Icono dinámico según el tipo de alerta -->
-                                    <div class="rounded-circle p-2 d-flex align-items-center justify-content-center"
-                                        [ngClass]="alerta.tipo === 'ANALISIS_COMPLETADO' ? 'bg-success-light text-success' : 'bg-primary-light text-primary'"
-                                        style="width: 35px; height: 35px; flex-shrink: 0;">
-                                        <i
-                                            [ngClass]="alerta.tipo === 'ANALISIS_COMPLETADO' ? 'bi bi-clipboard2-check' : 'bi bi-chat-left-dots'"></i>
-                                    </div>
+    <!-- Caso A: Recorriendo las alertas ecológicas vivas de MongoDB -->
+    <li *ngFor="let alerta of alertasCampana">
+        <a class="dropdown-item p-3 border-bottom d-flex align-items-start gap-2 text-wrap"
+            (click)="clickMarcarLeida(alerta)" style="transition: background 0.2s ease;">
+            
+            <!-- 🟢 ICONO DINÁMICO SEGÚN TU TIPO REAL DE NOTIFICACIÓN ECO-TECH -->
+            <div class="rounded-circle p-2 d-flex align-items-center justify-content-center"
+                [ngClass]="{
+                    'bg-success-light text-success': alerta.tipo === 'NUEVO_RECICLAJE',
+                    'bg-info-light text-info': alerta.tipo === 'LOGRO_DESBLOQUEADO',
+                    'bg-warning-light text-warning': alerta.tipo === 'RECOMPENSA_CANJEADA',
+                    'bg-primary-light text-primary': alerta.tipo === 'AVISO_GENERAL'
+                }"
+                style="width: 35px; height: 35px; flex-shrink: 0;">
+                
+                <!-- Iconografía semántica adaptada -->
+                <i [ngClass]="{
+                    'bi bi-recycle': alerta.tipo === 'NUEVO_RECICLAJE',
+                    'bi bi-trophy': alerta.tipo === 'LOGRO_DESBLOQUEADO',
+                    'bi bi-gift': alerta.tipo === 'RECOMPENSA_CANJEADA',
+                    'bi bi-megaphone': alerta.tipo === 'AVISO_GENERAL'
+                }"></i>
+            </div>
 
-                                    <div class="w-100">
-                                        <span class="d-block fw-semibold text-dark small" style="line-height: 1.2;">{{
-                                            alerta.titulo }}</span>
-                                        <p class="mb-1 text-muted small mt-1"
-                                            style="font-size: 0.75rem; line-height: 1.3;">{{ alerta.mensaje }}</p>
-                                        <small class="text-secondary" style="font-size: 0.65rem;">{{ alerta.createdAt |
-                                            date:'shortTime' }}</small>
-                                    </div>
-                                </a>
-                            </li>
+            <!-- CONTENIDO DE LA ALERTA -->
+            <div class="w-100">
+                <span class="d-block fw-semibold text-dark small" style="line-height: 1.2;">
+                    {{ alerta.titulo }}
+                </span>
+                <p class="mb-1 text-muted small mt-1" style="font-size: 0.75rem; line-height: 1.3;">
+                    {{ alerta.mensaje }}
+                </p>
+                <small class="text-secondary" style="font-size: 0.65rem;">
+                    <i class="bi bi-clock mr-1"></i> {{ alerta.createdAt | date:'shortTime' }}
+                </small>
+            </div>
+        </a>
+    </li>
 
-                            <!-- Caso B: Sin alertas (Estado vacío limpio) -->
-                            <li *ngIf="alertasCampana.length === 0" class="text-center py-4 text-muted">
-                                <i class="bi bi-bell-slash fs-3 d-block mb-1 text-secondary opacity-50"></i>
-                                <span class="small d-block px-3">Bandeja de entrada al día. No hay pendientes por
-                                    revisar. ✨</span>
-                            </li>
+    <!-- Caso B: Sin alertas (Estado vacío limpio) -->
+    <li *ngIf="alertasCampana.length === 0" class="text-center py-4 text-muted">
+        <i class="bi bi-bell-slash fs-3 d-block mb-1 text-secondary opacity-50"></i>
+        <span class="small d-block px-3">Bandeja de entrada al día. No hay pendientes por revisar. ✨</span>
+    </li>
 
-                        </div>
+</div>
 
                         <!-- BOTÓN INFERIOR DE ACCESO HISTÓRICO -->
                         <li class="p-2 bg-light border-top text-center">

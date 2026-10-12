@@ -7,8 +7,8 @@ import { environment } from '../../environments/environment';
 import Swal from 'sweetalert2';
 
 const claveVapidApi = environment.VAPI_KEY_PUBLIC;
-// Ajustamos la ruta para que concatene tu endpoint unificado de guardado
-const urlBackend = `${environment.urlBackedNotification}`;
+// 🟢 ALINEADO: Apunta dinámicamente al módulo de notificaciones push de tu API unificada
+const urlBackend = `${environment.apiUrl}/notificaciones/notipush/save-subscription`;
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +41,9 @@ export class NotificacionPushService {
     }
   }
 
+  /**
+   * 🔥 GATILLO DEL SWITCH PRINCIPAL EN EL DASHBOARD
+   */
   subscribeToNotifications() {
     this.isProcessing$.next(true);
     
@@ -48,68 +51,54 @@ export class NotificacionPushService {
       serverPublicKey: this.VAPID_PUBLIC_KEY
     })
     .then(sub => {
-      const userString = localStorage.getItem('user');
-      const userObj = userString ? JSON.parse(userString) : null;
-      const currentUid = userObj && userObj.id ? userObj.id.toString() : 'ADMIN' ;
       const miToken = localStorage.getItem('token') || '';
 
-      const subJson = sub.toJSON();
-
-      const payloadBody = {
-        endpoint: subJson.endpoint,
-        expirationTime: subJson.expirationTime,
-        keys: subJson.keys,
-        userId: currentUid 
-      };
+      // 🟢 CORRECCIÓN CRÍTICA: Enviamos el JSON plano directo de la suscripción al backend
+      // tal como lo requiere el destructurador de tu controlador en Node
+      const payloadBody = sub.toJSON();
 
       const headers = {
-        'x-token': miToken,
+        'x-token': miToken, // El middleware validarJWT capturará el uid desde aquí
       };
       
-      console.log('📡 [WEBPUSH]: Registrando dispositivo comercial en Node para el ID:', currentUid);
+      console.log('📡 [WEBPUSH]: Sincronizando credenciales de dispositivo en MongoDB...');
 
       this.http.post(urlBackend, payloadBody, { headers }).subscribe({
-        next: () => {
-          console.log('✅ ¡Suscripción comercial guardada con éxito en MongoDB!');
+        next: (res: any) => {
+          console.log('✅ ¡Canal push enlazado con éxito en Atlas!');
           this.isSubscribed$.next(true);
           this.isProcessing$.next(false);
-          Swal.fire('¡Banners Activados!', 'Recibirás alertas flotantes incluso si tienes la aplicación minimizada.', 'success');
+          Swal.fire('¡Notificaciones Activas!', 'Recibirás alertas en tiempo real sobre posiciones, sorteos y nuevos hábitos.', 'success');
 
-          // Despacho del globo de bienvenida nativo adaptado
+          // Despacho del globo de bienvenida ecológico nativo adaptado
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then((registration) => {
               
-              // 🟢 SOLUCIÓN: Tipamos el objeto explícitamente como 'any' o corregimos el arreglo numérico
               const opcionesNotificacion: any = {
-                body: 'Recibirás avisos en tiempo real cada vez que Gemini analice un presupuesto.',
-                icon: 'assets/icons/72.png',
-                badge: 'assets/icons/72.png',
-                vibrate:[200, 100, 200], // <-- Arreglo limpio de números de milisegundos
-                tag: 'bienvenida-comercial'
+                body: 'Recibirás avisos instantáneos cada vez que clasifiques a un sorteo o acumules puntos.',
+                icon: 'assets/icons/icon-72x72.png',
+                badge: 'assets/icons/icon-72x72.png',
+                vibrate:[200, 100, 200],
+                tag: 'bienvenida-gamificacion'
               };
 
-              registration.showNotification('🔔 Canal Comercial Conectado', opcionesNotificacion);
+              registration.showNotification('🔔 Canal Eco-Tech Conectado', opcionesNotificacion);
             }).catch(swErr => console.log('Aviso: Service Worker no listo para el globo inmediato:', swErr));
           }
         },
         error: err => {
           console.error('❌ Error al guardar la suscripción en Node:', err);
-          // 🔥 RETORNO AL INICIO: Si el backend rechaza la petición, forzamos el apagado del switch
           this.isSubscribed$.next(false);
           this.isProcessing$.next(false);
-          Swal.fire('Error de enlace', 'El servidor no pudo registrar el token. Inténtalo más tarde.', 'error');
+          Swal.fire('Error de enlace', 'El servidor no pudo registrar el dispositivo. Inténtalo más tarde.', 'error');
         }
       });
     })
     .catch(err => {
       console.error('❌ Permiso denegado por el usuario o error VAPID:', err);
-      // 🔥 RETORNO AL INICIO: Si el usuario presiona "Bloquear" o "Cerrar" en el aviso de Chrome
       this.isSubscribed$.next(false);
       this.isProcessing$.next(false);
-      Swal.fire('Permiso requerido', 'Debes habilitar las notificaciones en el candado del navegador para encender el canal.', 'info');
+      Swal.fire('Permisos requeridos', 'Debes habilitar las notificaciones en el candado del navegador para encender el canal.', 'info');
     });
   }
 }
-
-
-

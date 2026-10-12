@@ -1,0 +1,154 @@
+<div class="modal-body p-4">
+    <!-- PESTAÑAS DEL CONTROL MAESTRO -->
+    <div class="tab-content-set mb-4">
+        <ul class="nav nav-pills border-0 bg-light p-1 rounded-pill">
+            <li class="nav-item">
+                <a class="nav-link rounded-pill cursor-pointer font-weight-bold" 
+                   [class.active]="option_selectedd === 1" (click)="optionSelected(1)">
+                   <i class="fas fa-pen-nib mr-1"></i> Redactar Aviso
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link rounded-pill cursor-pointer font-weight-bold" 
+                   [class.active]="option_selectedd === 2" (click)="optionSelected(2)">
+                   <i class="fas fa-mobile-alt mr-1"></i> Previsualizar en App
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link rounded-pill cursor-pointer font-weight-bold" 
+                   [class.active]="option_selectedd === 3" (click)="optionSelected(3)">
+                   <i class="fas fa-history mr-1"></i> Historial ({{ totalComunicados }})
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- FORMULARIO REACTIVO -->
+    <form [formGroup]="notificacionForm" (ngSubmit)="guardar()">
+        
+        <!-- PESTAÑA 1: REDACCIÓN -->
+        <div *ngIf="option_selectedd === 1" class="animate__animated animate__fadeIn">
+            <div class="form-group mb-3">
+                <label class="font-weight-bold text-gray-700 small">Título del Comunicado Ecológico</label>
+                <input type="text" formControlName="titulo" class="form-control" placeholder="Ej: ¡Sorteo Extraordinario este Fin de Semana! 🎉">
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="font-weight-bold text-gray-700 small">Categoría / Tipo de Aviso</label>
+                <select formControlName="tipo_eco" class="form-control">
+                    <option value="AVISO_GENERAL">📣 Aviso General de la Campaña</option>
+                    <option value="URGENTE">⚠️ Comunicado Urgente (Alerta Prioritaria)</option>
+                </select>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="font-weight-bold text-gray-700 small">Mensaje / Cuerpo del Comunicado</label>
+                <textarea formControlName="mensaje" rows="4" class="form-control" placeholder="Escribe las instrucciones detalladas para los retadores..."></textarea>
+            </div>
+
+            <div class="card border-0 bg-light rounded p-3 mb-3">
+                <div class="custom-control custom-switch d-flex align-items-center justify-content-between p-0">
+                    <div>
+                        <h6 class="font-weight-bold text-gray-900 mb-0"><i class="fas fa-bolt text-warning mr-1"></i> Disparar Gatillo WebPush</h6>
+                        <small class="text-muted">Envía una notificación push instantánea a todos los smartphones suscritos.</small>
+                    </div>
+                    <div class="form-check form-switch m-0">
+                        <input type="checkbox" formControlName="notificado_push" class="form-check-input cursor-pointer" id="switchPushGlobal" style="width: 2.5em; height: 1.25em;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-right pt-2 d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-secondary px-4" (click)="cerrar()">Cancelar</button>
+                <button type="submit" class="btn btn-success px-4 font-weight-bold shadow-sm" [disabled]="notificacionForm.invalid">
+                    <i class="fas fa-paper-plane mr-1"></i> Publicar Ahora
+                </button>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 2: PREVISUALIZADOR EN SMARTPHONE (MOCKUP ORIGINAL) -->
+        <div *ngIf="option_selectedd === 2" class="d-flex justify-content-center device-mockup py-3">
+            <div class="smartphone-case position-relative border shadow rounded-xl p-3 bg-dark" style="width: 300px; height: 500px; border-radius: 40px;">
+                <div class="screen bg-white rounded-lg p-3 w-100 overflow-hidden text-dark font-sans shadow-inner position-relative" style="height: 100%; border-radius: 28px;">
+                    <!-- Barra de Estado Móvil -->
+                    <div class="d-flex justify-content-between align-items-center px-1 mb-4 font-weight-bold text-gray-600" style="font-size: 11px;">
+                        <span>9:41</span>
+                        <div class="d-flex gap-1 small">
+                            <i class="fas fa-signal"></i>
+                            <i class="fas fa-wifi"></i>
+                            <i class="fas fa-battery-three-quarters"></i>
+                        </div>
+                    </div>
+
+                    <!-- BANNER PUSH SIMULADO -->
+                    <div class="card border-0 shadow-sm p-2 rounded-lg bg-light-eco border-left-4 border-success animate__animated animate__bounceIn">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <img src="assets/icons/icon-72x72.png" class="rounded" style="width: 20px; height: 20px;" alt="App Icon">
+                            <span class="font-weight-bold text-success text-uppercase" style="font-size: 9px; letter-spacing: 0.5px;">
+                                {{ notificacionForm.get('tipo_eco')?.value?.replace('_', ' ') }}
+                            </span>
+                        </div>
+                        <h6 class="font-weight-bold text-gray-900 mb-1" style="font-size: 12px; line-height: 1.2;">
+                            {{ notificacionForm.get('titulo')?.value || 'Sin Título' }}
+                        </h6>
+                        <p class="text-muted mb-0 small text-justify" style="font-size: 10px; line-height: 1.3;">
+                            {{ notificacionForm.get('mensaje')?.value || 'Escribe un mensaje en la pestaña anterior para previsualizar el banner móvil en tiempo real...' }}
+                        </p>
+                    </div>
+
+                    <!-- Botón Simulador de Cierre en Teléfono -->
+                    <div class="position-absolute text-center p-3" style="bottom: 10px; left: 0; right: 0;">
+                        <button type="button" class="btn btn-outline-secondary btn-sm btn-block rounded-pill font-weight-bold small" style="font-size: 11px;" (click)="optionSelected(1)">
+                            <i class="fas fa-edit mr-1"></i> Volver a Corregir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA 3: HISTORIAL CENTRAL DE ENVÍOS -->
+        <div *ngIf="option_selectedd === 3" class="animate__animated animate__fadeIn">
+            <h6 class="font-weight-bold text-gray-700 mb-3"><i class="fas fa-history mr-1"></i> Bitácora de Alertas Emitidas ({{ totalComunicados }} en total)</h6>
+            
+            <div class="table-responsive rounded-lg overflow-hidden border" style="max-height: 320px;">
+                <table class="table table-hover align-middle mb-0 text-left small">
+                    <thead class="bg-light font-weight-bold text-gray-700">
+                        <tr>
+                            <th class="py-2">Fecha / Hora</th>
+                            <th class="py-2">Título del Aviso</th>
+                            <th class="py-2 text-center">Categoría</th>
+                            <th class="py-2 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of historial">
+                            <td class="text-muted">{{ item.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
+                            <td class="font-weight-bold text-gray-900">{{ item.titulo }}</td>
+                            <td class="text-center">
+                                <span class="badge px-2 py-1 text-uppercase font-weight-bold"
+                                      [ngClass]="item.tipo === 'URGENTE' ? 'bg-danger text-white' : 'bg-primary text-white'">
+                                    {{ item.tipo }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-circle" (click)="eliminarComunicado(item)" title="Borrar de la cartelera">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="historial.length === 0">
+                            <td colspan="4" class="text-center py-4 text-muted">
+                                <i class="fas fa-bell-slashed mr-1"></i> No hay comunicados registrados aún en Atlas.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="text-right pt-4 border-top mt-3">
+                <button type="button" class="btn btn-secondary px-4" (click)="cerrar()">Cerrar Historial</button>
+            </div>
+        </div>
+
+    </form>
+</div>

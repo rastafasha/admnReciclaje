@@ -10,24 +10,22 @@ import { UsuariosRecientesComponent } from './usuarios-recientes/usuarios-recien
 import {PipesModule} from '../pipes/pipes.module';
 import { LineChartComponent } from './charts/line-chart/line-chart.component';
 import { PieChart2Component } from './charts/pie-chart2/pie-chart2.component';
-import { ProjectitemComponent } from './projectitem/projectitem.component';
 import { ConfModule } from '../pages/conf/conf.module';
 import { SharedModule } from '../shared/shared.module';
-import { ConfigAlertasComponent } from './config-alertas/config-alertas.component';
+import { ModalNotificacionesComponent } from './modal-notificaciones/modal-notificaciones.component';
 
 @NgModule({ declarations: [
         UsuariosRecientesComponent,
         LineChartComponent,
         PieChart2Component,
-        ProjectitemComponent,
-        // BarChartComponent,
+        ModalNotificacionesComponent
+        
     ],
     exports: [
         UsuariosRecientesComponent,
         LineChartComponent,
         PieChart2Component,
-        ProjectitemComponent,
-        // BarChartComponent,
+        ModalNotificacionesComponent
     ], imports: [
         CommonModule,
         RouterModule,

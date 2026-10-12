@@ -9,39 +9,38 @@ import Chart from 'chart.js/auto';
 })
 export class PieChart2Component implements OnChanges {
   public chart: Chart;
-  isLoading:boolean = false;
-  @Input() projects: any[];
+  isLoading: boolean = false;
+  
+  // 🎯 Recibe el payload de distribución directo desde las métricas del padre
+  @Input() distribucion: { clasificados: number; pendientes: number } | null = null;
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['projects'] && this.projects) {
+    if (changes['distribucion'] && this.distribucion) {
       this.updateChart();
     }
   }
 
-  
-
   updateChart() {
-    const paidCount = this.projects.filter(p => p.notificado === true).length;
-    const debtCount = this.projects.filter(p => p.notificado === false).length;
+    if (!this.distribucion) return;
+
     const data = {
-      labels: ['Con Presentación', 'Sin Presentación'],
+      labels: ['Clasificados (≥ 55 pts)', 'Pendientes de Meta'],
       datasets: [
         {
-          label: 'Comportamiento',
-          data: [paidCount, debtCount],
+          label: 'Cantidad de Retadores',
+          data: [this.distribucion.clasificados, this.distribucion.pendientes],
           backgroundColor: [
-            'rgba(75, 192, 192, 0.6)', // greenish for paid
-            'rgba(255, 99, 132, 0.6)'  // reddish for debt
+            'rgba(46, 204, 113, 0.7)', // Verde Eco-Tech para clasificados
+            'rgba(149, 165, 166, 0.6)'  // Gris suave para los pendientes
           ],
           borderColor: [
-            'rgba(75, 192, 192, 1)',
-            'rgba(255, 99, 132, 1)'
+            'rgba(46, 204, 113, 1)',
+            'rgba(149, 165, 166, 1)'
           ],
           borderWidth: 1
         }
       ]
     };
-    
 
     if (this.chart) {
       this.chart.data = data;
@@ -55,20 +54,19 @@ export class PieChart2Component implements OnChanges {
           plugins: {
             legend: {
               position: 'top',
+              labels: {
+                boxWidth: 15,
+                font: { size: 12, weight: 'bold' }
+              }
             },
             title: {
               display: true,
-              text: 'Comportamiento'
+              text: 'Estado Global del Concurso 🏆',
+              font: { size: 14, weight: 'bold' }
             }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
+          }
+        }
       });
     }
-    
   }
 }

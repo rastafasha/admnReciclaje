@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './menu/menu.component';
-import { MenuiconosComponent } from './menuiconos/menuiconos.component';
 
 // Pipes
 import { PipesModule } from '../pipes/pipes.module';
@@ -19,6 +18,7 @@ import { BackButtnComponent } from './backButtn/backButtn.component';
 import { PwaNotifInstallerComponent } from './pwa-notif-installer/pwa-notif-installer.component';
 import { ComponentsModule } from '../components/components.module';
 import { ConfigAlertasComponent } from '../components/config-alertas/config-alertas.component';
+import { MenuiconosComponent } from './menuiconos/menuiconos.component';
 
 
 

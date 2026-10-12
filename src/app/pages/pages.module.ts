@@ -25,9 +25,8 @@ import { DashboardUserComponent } from './dashboard-user/dashboard-user.componen
 import { UsersComponent } from './users/users.component';
 
 import { BusquedaComponent } from './busqueda/busqueda.component';
-import { ProjectModule } from './project/project.module';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
-import { WhatsappComponent } from './whatsapp/whatsapp.component';
+import { GamificacionModule } from './gamificacion/gamificacion.module';
 
 @NgModule({ 
     declarations: [
@@ -39,7 +38,6 @@ import { WhatsappComponent } from './whatsapp/whatsapp.component';
         PagesComponent,
         BusquedaComponent,
         NotificacionesComponent,
-        WhatsappComponent
     ],
     exports: [
         DashboardComponent,
@@ -50,7 +48,6 @@ import { WhatsappComponent } from './whatsapp/whatsapp.component';
         PagesComponent,
         BusquedaComponent,
         NotificacionesComponent,
-        WhatsappComponent
     ], imports: [
         CommonModule,
         SharedModule,
@@ -61,7 +58,7 @@ import { WhatsappComponent } from './whatsapp/whatsapp.component';
         ConfModule,
         ComponentsModule,
         NgxPaginationModule,
-        ProjectModule,
+        GamificacionModule,
     ], 
         providers: [
         provideHttpClient(withInterceptorsFromDi())

@@ -2,8 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Cliente } from 'src/app/models/cliente';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
-import { ClienteService } from 'src/app/services/cliente.service';
-import { UserService } from 'src/app/services/user.service';
+import { GamificacionService } from 'src/app/services/gamificacion.service';
+
+declare var bootstrap: any;
 
 @Component({
     selector: 'app-dashboard-admin',
@@ -14,75 +15,109 @@ import { UserService } from 'src/app/services/user.service';
 export class DashboardAdminComponent implements OnInit {
   @Input() clientes: Cliente[] = [];
 
-  title = 'Panel Administrativo';
+  title = 'Panel Administrativo Ecológico';
   public user: any;
   public profile: User;
   displaycomponent: string = 'none';
   limit = 3;
 
   error: string;
-  uid:string;
+  uid: string;
+  loadingMetricas: boolean = true;
 
-  usuarios: User;
-  usuario: User;
-  query:string ='';
-  selectedProject:Cliente;
-  projectSeleccionado:Cliente;
+  // 📊 Objeto unificado conectado a tu backend de MongoDB Atlas
+  public stats: any = {
+  totalParticipantes: 0,
+  totalHabitosCompletados: 0,
+  puntosTotalesGlobales: 0,
+  puntosActualesGlobales: 0,
+  clasificadosSorteo: 0,
+  distribucionSorteo: { clasificados: 0, pendientes: 0 }, // 📊 Para el Doughnut
+  evolucionMensualHabitos: []                             // 📈 Para el Line Chart
+};
+
+public comunicadoActivo: any = null;
 
   constructor(
-    private userService: UserService,
     private authService: AuthService,
-    private clienteService: ClienteService,
-    
-
+    private participantesService: GamificacionService // 👈 Declarado en constructor
   ) {
-    this.user = authService.getLocalStorage();
+    this.user = this.authService.getLocalStorage();
   }
 
   ngOnInit(): void {
-
-    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
     this.authService.closeMenu();
     this.uid = this.user.uid;
-    this.getProjectsData();
-    this.subscribeToFilteredProjects();
+    
+    // Disparamos la carga asíncrona global del módulo Eco-Tech
+    this.cargarMetricasEco();
   }
 
-  getProjectsData(){
-    this.clienteService.obtenerClientes().subscribe((resp:any)=>{
-      this.clientes = resp;
-    })
-  }
-
-  onEditProject(project: Cliente) {
-    this.selectedProject = project;
-  }
-  onDeleteProject(project: Cliente) {
-    this.selectedProject = project;
-  }
-
-  subscribeToFilteredProjects() {
-    this.clienteService.filteredClientes$.subscribe((filteredProjects: Cliente[]) => {
-      if (filteredProjects && filteredProjects.length > 0) {
-        this.clientes = filteredProjects;
-      } else {
-        this.getProjectsData();
+  /**
+   * Captura en caliente los totales del concurso de reciclaje
+   */
+  cargarMetricasEco(): void {
+    this.loadingMetricas = true;
+    this.participantesService.obtenerMetricasDashboard().subscribe({
+      next: (data) => {
+        this.stats = data;
+        this.loadingMetricas = false;
+        console.log('📈 Métricas ecológicas sincronizadas con éxito:', data);
+      },
+      error: (err) => {
+        console.error('❌ Error cargando contadores en dashboard:', err);
+        this.loadingMetricas = false;
       }
     });
   }
 
+  /**
+ * Prepara el cascarón limpio del formulario antes de abrir la vista
+ */
+abrirModalAviso(): void {
+  this.comunicadoActivo = null;
+  console.log('📣 [CARTELERA]: Desplegando modal por inicializador lógico.');
 
-  openEditModal(): void {
-    this.selectedProject = null;
+  // Forzar levantamiento manual por JS si falla el data-bs-target
+  const modalElement = document.getElementById('notificacionesModal');
+  if (modalElement) {
+    const modalInstance = new bootstrap.Modal(modalElement, {
+      keyboard: true,
+      backdrop: true
+    });
+    modalInstance.show();
   }
+}
 
-  onCloseModal(): void {
-    this.projectSeleccionado = null;
-  }
+/**
+ * Limpia el estado de selección al cerrar la ventana
+ */
+cerrarModalAviso(): void {
+  this.comunicadoActivo = null;
+  console.log('🧹 [CARTELERA]: Forzando limpieza absoluta de backdrops.');
 
-  PageSize() {
-    this.getProjectsData();
+  // Ejecutamos una limpieza profunda en el DOM
+  setTimeout(() => {
+    // 1. Remover TODOS los backdrops grises que existan en la pantalla
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
 
-  }
+    // 2. Desbloquear el scroll del body quitando las clases de Bootstrap
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    
+    // 3. Remover estilos sueltos que a veces inyecta Bootstrap 5
+    const modalOpenElements = document.querySelectorAll('.modal-open');
+    modalOpenElements.forEach(el => el.classList.remove('modal-open'));
+  }, 150); // 150ms asegura que la animación de Angular haya terminado
+}
+/**
+ * Callback automático para refrescar tus contadores globales si el aviso alteró estadísticas
+ */
+onComunicadoDespachado(): void {
+  this.cargarMetricasEco(); // Recarga tus tarjetas en vivo para ver reflejado el cambio
+}
   
 }

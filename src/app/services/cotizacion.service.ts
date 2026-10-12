@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Cotizacion } from '../models/cotizacion';
+// import { Cotizacion } from '../models/cotizacion';
 
 const baseUrl = environment.apiUrl;
 
@@ -44,18 +44,18 @@ export class CotizacionService {
    * Trae todas las solicitudes registradas (Útil para la carga inicial de tu tabla propia)
    * GET: /api/cotizaciones
    */
-  obtenerHistorialCotizaciones(): Observable<Cotizacion[]> {
-    return this.http.get<{ ok: boolean; cotizaciones: Cotizacion[] }>(`${this.baseUrlapi}/historial`).pipe(
-      map(response => response.cotizaciones)
-    );
-  }
+//   obtenerHistorialCotizaciones(): Observable<Cotizacion[]> {
+//     return this.http.get<{ ok: boolean; cotizaciones: Cotizacion[] }>(`${this.baseUrlapi}/historial`).pipe(
+//       map(response => response.cotizaciones)
+//     );
+//   }
 
-  obtenerCotizacionesPorCliente(clienteId: string): Observable<Cotizacion[]> {
-  return this.http.get<{ ok: boolean; cotizaciones: Cotizacion[] }>(`${this.baseUrlapi}/cliente/${clienteId}`).pipe(
-    // 🟢 LA CLAVE: Extraemos la propiedad 'cotizaciones' del JSON de respuesta
-    map(response => response.cotizaciones) 
-  );
-}
+//   obtenerCotizacionesPorCliente(clienteId: string): Observable<Cotizacion[]> {
+//   return this.http.get<{ ok: boolean; cotizaciones: Cotizacion[] }>(`${this.baseUrlapi}/cliente/${clienteId}`).pipe(
+//     // 🟢 LA CLAVE: Extraemos la propiedad 'cotizaciones' del JSON de respuesta
+//     map(response => response.cotizaciones) 
+//   );
+// }
 
 buscarClientePorCotizacion(cotId: string): Observable<any> {
   return this.http.get<any>(`${this.baseUrlapi}/buscar-por-cotizacion/${cotId}`);

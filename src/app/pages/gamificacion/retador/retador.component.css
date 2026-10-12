@@ -1,0 +1,103 @@
+/* Paleta Eco-Tech & Integración CRM Base */
+.bg-light-eco {
+    background-color: #f4f7f6;
+    border-bottom: 2px solid #e2ebd5;
+}
+
+/* Manejo de Avatares en la Tabla */
+.avatar-table {
+    width: 42px;
+    height: 42px;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+}
+
+/* Efecto de Resaltado en Verde Claro Eco-Tech para Clasificados (Puntos >= 55) */
+.fila-clasificada {
+    background-color: rgba(46, 204, 113, 0.06) !important;
+    transition: background-color 0.25s ease;
+}
+
+.fila-clasificada:hover {
+    background-color: rgba(46, 204, 113, 0.12) !important;
+}
+
+/* Badges de Puntuación Estilizados */
+.badge-eco-points {
+    background-color: #2ecc71;
+    color: #ffffff;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 4px rgba(46, 204, 113, 0.2);
+}
+
+.badge-light-points {
+    background-color: #eaeded;
+    color: #566573;
+    font-size: 0.85rem;
+}
+
+/* Estados de Clasificación Global */
+.badge-status-eco {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #27ae60;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: inline-block;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.badge-status-pending {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: #d35400;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    display: inline-block;
+    border: 1px solid rgba(243, 156, 18, 0.2);
+}
+
+/* Botones de acción circulares estilizados */
+.btn-circle {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-refresh {
+    background-color: #ffffff;
+    border: 1px solid #dcdde1;
+    color: #57606f;
+    transition: all 0.2s ease;
+}
+
+.btn-refresh:hover {
+    background-color: #f1f2f6;
+    color: #2f3542;
+}
+
+.btn-action-view {
+    background-color: #ffffff;
+    border: 1px solid #d1d8e0;
+    transition: all 0.2s ease;
+}
+
+.btn-action-view:hover {
+    background-color: #4b7bec;
+    border-color: #4b7bec;
+}
+
+.btn-action-view:hover i {
+    color: #ffffff !important;
+}
+
+/* Tipografía monoespaciada para códigos/cédulas */
+.font-mono {
+    font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+}

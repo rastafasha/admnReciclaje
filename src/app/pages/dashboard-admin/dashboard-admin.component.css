@@ -38,3 +38,70 @@
         justify-content: space-between;
     }
 }
+
+
+/* nuevo */
+
+/* Tus clases nativas estructurales se mantienen intactas */
+.pagetitle {
+    display: flex;
+    flex-direction: row;
+}
+
+.fichasmall {
+    display: flex;
+    flex-direction: column;
+}
+
+.inffichasmall {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+/* 🎨 Bordes de acento para las Tarjetas del CRM */
+.border-left-primary {
+    border-left: 4px solid #4e73df !important;
+}
+
+.border-left-success {
+    border-left: 4px solid #1cc88a !important;
+}
+
+.border-left-info {
+    border-left: 4px solid #36b9cc !important;
+}
+
+.border-left-warning {
+    border-left: 4px solid #f6c23e !important;
+}
+
+.bg-light-eco {
+    background-color: #f8faf9;
+    border-left: 4px solid #2ecc71;
+}
+
+/* Responsividad de tus fichas */
+@media(max-width:768px) {
+    .fichasmall {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media(max-width:480px) {
+    .fichasmall {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .profile .profile-card img {
+        max-width: 70px;
+    }
+    .pagetitle {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}

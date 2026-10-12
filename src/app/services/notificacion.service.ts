@@ -14,7 +14,6 @@ const vapiApiKeyPublica = environment.VAPI_KEY_PUBLIC;
 export class NotificacionService {
 
   private baseUrl = `${baseUrl}/notificaciones`;
-  private pushUrl = `${baseUrl}/notipush`;
 
   // 🔑 COPIA AQUÍ LA MISMA LLAVE PÚBLICA VAPID QUE GENERASTE EN TU .ENV DEL BACKEND
   private readonly VAPI_KEY_PUBLIC = vapiApiKeyPublica;
@@ -55,35 +54,42 @@ export class NotificacionService {
    * Detona el banner nativo de Chrome/Safari: "¿Desea recibir notificaciones?"
    */
   suscribirA_PushNotifications(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      if (!this.swPush.isEnabled) {
-        console.warn('⚠️ WebPush no está soportado en este navegador.');
-        return resolve(false);
-      }
+  return new Promise((resolve) => {
+    if (!this.swPush.isEnabled) {
+      console.warn('⚠️ WebPush no está soportado en este navegador.');
+      return resolve(false);
+    }
 
-      this.swPush.requestSubscription({
-        serverPublicKey: this.VAPI_KEY_PUBLIC
-      })
-      .then((suscripcionObjeto: PushSubscription) => {
-        // Enviamos las llaves cifradas a la base de datos de Node
-        this.http.post(`${this.pushUrl}/save-subscription`, suscripcionObjeto.toJSON())
-          .subscribe({
-            next: (res: any) => {
-              console.log('✅ [WEBPUSH]: Dispositivo guardado en Mongo:', res.msg);
-              resolve(true);
-            },
-            error: (err) => {
-              console.error('❌ Error enviando suscripción al backend:', err);
-              resolve(false);
-            }
-          });
-      })
-      .catch(err => {
-        console.error('❌ El usuario denegó los permisos en el banner:', err);
-        resolve(false);
-      });
+    this.swPush.requestSubscription({
+      serverPublicKey: this.VAPI_KEY_PUBLIC
+    })
+    .then((suscripcionObjeto: PushSubscription) => {
+      
+      // 🟢 CORRECCIÓN 1: Extraer el token físico para pasar el middleware validarJWT
+      const miToken = localStorage.getItem('token') || '';
+      const headers = { 'x-token': miToken };
+
+      // 🟢 CORRECCIÓN 2: Apuntar al endpoint real unificado en tu backend de notificaciones
+      const urlDestino = `${this.baseUrl}/notificaciones/suscribir`;
+
+      this.http.post(urlDestino, suscripcionObjeto.toJSON(), { headers })
+        .subscribe({
+          next: (res: any) => {
+            console.log('✅ [WEBPUSH]: Dispositivo guardado en Mongo:', res.msg);
+            resolve(true);
+          },
+          error: (err) => {
+            console.error('❌ Error enviando suscripción al backend:', err);
+            resolve(false);
+          }
+        });
+    })
+    .catch(err => {
+      console.error('❌ El usuario denegó los permisos en el banner:', err);
+      resolve(false);
     });
-  }
+  });
+}
 
   /**
    * 🔍 Verificar de forma síncrona si el navegador ya está suscrito actualmente

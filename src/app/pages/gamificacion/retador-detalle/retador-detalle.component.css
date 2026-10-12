@@ -1,0 +1,85 @@
+/* Configuración del Avatar Principal */
+.avatar-modal {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border: 3px solid #ffffff;
+}
+
+/* Insignia Flotante */
+.badge-floating-eco {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    font-size: 0.9rem;
+    border: 1px solid #e2ebd5;
+}
+
+/* Círculos contenedores de Iconos */
+.icon-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+/* Paleta de Colores Suaves (Soft Alerts & Backgrounds) */
+.bg-soft-info {
+    background-color: rgba(54, 185, 204, 0.1);
+}
+
+.bg-soft-success {
+    background-color: rgba(46, 204, 113, 0.08) !important;
+    border: 1px solid rgba(46, 204, 113, 0.2) !important;
+}
+
+.bg-soft-eco-icon {
+    background-color: rgba(46, 204, 113, 0.15);
+}
+
+.bg-secondary-soft {
+    background-color: rgba(133, 135, 150, 0.1);
+}
+
+/* Alertas Personalizadas Eco */
+.alert-eco-success {
+    background-color: rgba(46, 204, 113, 0.12);
+    color: #1e7e34;
+    border: 1px solid rgba(46, 204, 113, 0.25);
+}
+
+.alert-eco-pending {
+    background-color: rgba(243, 156, 18, 0.08);
+    color: #a04000;
+    border: 1px solid rgba(243, 156, 18, 0.2);
+}
+
+/* Botón de Cierre Personalizado */
+.btn-close-custom {
+    background: transparent;
+    border: 0;
+    font-size: 1.5rem;
+    color: #858796;
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-close-custom:hover {
+    color: #3a3b45;
+}
+
+/* Bordes redondeados del contenedor modal */
+.rounded-xl {
+    border-radius: 0.75rem;
+}

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { ProfileService } from 'src/app/models/profile.service';
 import { Profile } from 'src/app/models/profile';
 
 import { NotificacionService } from 'src/app/services/notificacion.service';
 import { SocketService } from 'src/app/services/socket.service';
 import { Subscription } from 'rxjs';
+import { ProfileService } from 'src/app/services/profile.service';
 
 
 

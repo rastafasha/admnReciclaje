@@ -1,0 +1,106 @@
+<!-- Modal de Bootstrap configurado con el ID que intercepta el padre -->
+<div class="modal fade" id="viewRetadorModal" tabindex="-1" role="dialog" aria-labelledby="viewRetadorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content border-0 shadow-lg rounded-xl" *ngIf="retador">
+            
+            <!-- CABECERA DEL MODAL -->
+            <div class="modal-header border-0 pb-0 position-relative">
+                <div class="position-absolute top-0 right-0 p-3">
+                    <button type="button" class="close btn-close-custom" data-dismiss="modal" aria-label="Close" (click)="cerrarModal()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CUERPO DEL MODAL (PERFIL EXTENDIDO) -->
+            <div class="modal-body text-center pt-2 px-4 pb-4">
+                
+                <!-- AVATAR CENTRAL -->
+                <div class="avatar-wrapper mb-3 position-relative d-inline-block">
+                    <img [src]="retador.profile?.avatar_url|imagenPipe:'perfiles'"
+                         class="rounded-circle avatar-modal border shadow" 
+                         alt="Avatar Retador">
+                    <!-- Insignia flotante de clasificación -->
+                    <span *ngIf="esClasificado" class="badge-floating-eco" title="Clasificado al sorteo">
+                        <i class="fas fa-trophy text-warning"></i>
+                    </span>
+                </div>
+
+                <!-- DATOS DE IDENTIDAD -->
+                <h4 class="font-weight-bold text-gray-900 mb-1">{{ retador.username }}</h4>
+                <p class="text-muted small mb-2"><i class="fas fa-envelope mr-1"></i> {{ retador.email }}</p>
+                
+                <div class="d-flex justify-content-center gap-2 mb-4">
+                    <span class="badge bg-light text-secondary border px-2 py-1 small">
+                        ID: {{ retador.identificacion || 'No provisto' }}
+                    </span>
+                    <span class="badge text-white px-2 py-1 small"
+                          [ngClass]="{'bg-success': retador.role === 'SUPERADMIN', 'bg-primary': retador.role === 'USER', 'bg-info': retador.role === 'EDITOR'}">
+                        {{ retador.role }}
+                    </span>
+                </div>
+
+                <hr class="my-3 border-light">
+
+                <!-- CONTADORES ECOLÓGICOS (METRICAS EN VIVO) -->
+                <h6 class="text-uppercase text-left font-weight-bold text-gray-600 small mb-3">Métricas de Gamificación</h6>
+                
+                <div class="row g-3">
+                    <!-- HÁBITOS COMPLETADOS -->
+                    <div class="col-6">
+                        <div class="card bg-light border-0 rounded p-3 text-center h-100">
+                            <div class="icon-circle bg-soft-info mx-auto mb-2">
+                                <i class="fas fa-calendar-check text-info"></i>
+                            </div>
+                            <span class="text-muted small d-block">Hábitos</span>
+                            <h3 class="font-weight-bold text-gray-800 mb-0">{{ retador.profile?.habitosCompletados || 0 }}</h3>
+                        </div>
+                    </div>
+
+                    <!-- PUNTOS ACTUALES -->
+                    <div class="col-6">
+                        <div class="card border-0 rounded p-3 text-center h-100"
+                             [ngClass]="esClasificado ? 'bg-soft-success' : 'bg-light'">
+                            <div class="icon-circle mx-auto mb-2" 
+                                 [ngClass]="esClasificado ? 'bg-soft-eco-icon' : 'bg-secondary-soft'">
+                                <i class="fas fa-leaf" [ngClass]="esClasificado ? 'text-success' : 'text-secondary'"></i>
+                            </div>
+                            <span class="text-muted small d-block">Puntos Período</span>
+                            <h3 class="font-weight-bold mb-0" [ngClass]="esClasificado ? 'text-success' : 'text-gray-800'">
+                                {{ retador.profile?.puntos_actuales || 0 }}
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HISTÓRICO GLOBAL -->
+                <div class="card bg-light border-0 rounded p-3 text-left mt-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small font-weight-bold text-uppercase">Histórico Acumulado:</span>
+                        <span class="font-weight-bold text-gray-900">{{ retador.profile?.puntos_totales || 0 }} pts</span>
+                    </div>
+                </div>
+
+                <!-- ESTADO FINAL / NOTA INFORMATIVA -->
+                <div class="mt-4 p-3 rounded text-center small"
+                     [ngClass]="esClasificado ? 'alert-eco-success' : 'alert-eco-pending'">
+                    <div *ngIf="esClasificado">
+                        <i class="fas fa-check-circle text-success mr-1"></i> Este usuario cumple con el requisito mínimo (<strong>&ge; 55 pts</strong>) para participar en el sorteo.
+                    </div>
+                    <div *ngIf="!esClasificado">
+                        <i class="fas fa-exclamation-circle text-warning mr-1"></i> Requiere acumular <strong>{{ 55 - (retador.profile?.puntos_actuales ?? 0) }} pts</strong> adicionales para clasificar.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- PIE DEL MODAL -->
+            <div class="modal-footer border-0 pt-0 justify-content-center">
+                <button type="button" class="btn btn-secondary px-4 shadow-sm" data-dismiss="modal" (click)="cerrarModal()">
+                    Cerrar Ficha
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

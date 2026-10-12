@@ -32,7 +32,7 @@ import { environment } from 'src/environments/environment';
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
         })],
-    
+
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideHttpClient(

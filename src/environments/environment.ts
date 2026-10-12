@@ -6,9 +6,8 @@ export const environment = {
   production: false,
   apiUrl: "http://localhost:3000/api",
   socketUrl: "http://localhost:3000",
-  urlBackedNotification:'http://localhost:3000/api/notipush/save-subscription',
-  VAPI_KEY_PUBLIC: 'BHE_yrdEZUjf8_I-Dw8wyG0RNqSSyFBiKKnaIreQqk1rvG1qk9zCHPPJtC8XNEpJNw-BVF3KCAZO0PDtlylyfng',
-  
+  mediaUrlRemoto: 'https://res.cloudinary.com/dmv6aukai/image/upload/v1741275492/appreciclaje/uploads',
+  VAPI_KEY_PUBLIC:'BEB85Y3GcUa7XJ6q3aIZ4lBDJR97D_P2eDRg3XfPQPZm0p_Fk10H9eyy1CR7r3G0TwXV1zt3NoNEj6_O4pFQV8A'
 
 };
 

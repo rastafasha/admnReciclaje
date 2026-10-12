@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EscapeHtmlPipe } from './keep-html.pipe';
 import { SafePipe } from './safe.pipe';
-import { CloudinaryVideoPipe } from './cloudinary-video.pipe';
+import { ImagenPipe } from './imagen.pipe';
 
 
 
@@ -10,12 +10,12 @@ import { CloudinaryVideoPipe } from './cloudinary-video.pipe';
   declarations: [
     EscapeHtmlPipe,
     SafePipe,
-    CloudinaryVideoPipe
+    ImagenPipe
   ],
   exports: [
     EscapeHtmlPipe,
     SafePipe,
-    CloudinaryVideoPipe
+    ImagenPipe
   ],
   imports: [
     CommonModule,
