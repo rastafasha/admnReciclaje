@@ -31,7 +31,7 @@ export class ComunicadoService {
     return {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        'x-token': this.token // 🛡️ Sincroniza al 100% con tu validarJWT del backend
+        'x-token': localStorage.getItem('token') || '' // 🛡️ Firma estricta de tu validador JWT
       })
     };
   }
@@ -40,9 +40,9 @@ export class ComunicadoService {
    * 🚀 CREAR Y DISPARAR COMUNICADO AMBIENTAL GLOBAL
    * POST: /api/comunicados/enviar-global
    */
-  crearComunicado(comunicado: Comunicado): Observable<any> {
+  crearComunicado(comunicado: any): Observable<any> {
     const url = `${this.apiUrl}/enviar-global`;
-    // Pasamos el método generador de opciones corregido en el tercer parámetro
+    // Enviamos el objeto plano sin anidaciones extrañas en las opciones
     return this.http.post<any>(url, comunicado, this.getOpcionesHttp());
   }
 
@@ -52,7 +52,7 @@ export class ComunicadoService {
    */
   obtenerMisComunicados(pagina: number = 1): Observable<any> {
     const url = `${this.apiUrl}/mis-comunicados?page=${pagina}`;
-    return this.http.get<any>(url, this.getOpcionesHttp()); 
+    return this.http.get<any>(url, this.getOpcionesHttp());
   }
 
   /**

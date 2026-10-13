@@ -28,18 +28,46 @@ export class ModalNotificacionesComponent implements OnChanges {
   notificacionForm: FormGroup = this.fb.group({
     titulo: ['', [Validators.required]],
     mensaje: ['', [Validators.required]],
-    tipo_eco: ['AVISO_GENERAL', [Validators.required]], // Mapea directo a los nuevos tipos
+    tipo_eco: ['', [Validators.required]], // Mapea directo a los nuevos tipos
     notificado_push: [false]
   });
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['notificacionSeleccionado'] && this.notificacionSeleccionado) {
-      this.notificacionForm.patchValue(this.notificacionSeleccionado);
+  // 🛡️ ADUANA RESTRICCIONADA: Evaluamos si la propiedad 'notificacionSeleccionado' sufrió una mutación real de origen
+  if (changes['notificacionSeleccionado']) {
+    const cambioActual = changes['notificacionSeleccionado'].currentValue;
+
+    if (cambioActual) {
+      // Si estamos editando un aviso guardado en Atlas, rehidratamos el formulario
+      this.notificacionForm.patchValue(cambioActual);
     } else {
-      this.notificacionForm.reset({ tipo_eco: 'AVISO_GENERAL', notificado_push: false });
+      // 🧼 LIMPIEZA EXCLUSIVA DE ENTRADA: Solo resetea al inicializar el componente en limpio
+      this.notificacionForm.reset({ 
+        tipo_eco: '', 
+        notificado_push: false 
+      });
     }
+    
+    // Solo consultamos el historial si el modal se está abriendo de verdad, ahorrando RAM
     this.actualizarHistorial();
   }
+}
+
+/**
+ * 🎛️ GATILLO INTERACTIVO PARA EL SWITCH DEL ADMIN
+ * Destraba el bloqueo visual de Bootstrap y sincroniza la memoria RAM de Angular
+ */
+alternarGatilloPush(event: any) {
+  // Capturamos el estado booleano nativo del hardware del clic (true/false)
+  const valorCheck = event.target.checked;
+  
+  console.log('🕵️‍♂️ Modificando estado del switch WebPush en el Admin a:', valorCheck);
+  
+  // Forzamos la inyección directa en el control del FormGroup
+  this.notificacionForm.patchValue({
+    notificado_push: valorCheck
+  });
+}
 
   /**
    * 🚀 PUBLICAR Y NOTIFICAR EN CALIENTE DESDE EL PANEL DE CONTROL
