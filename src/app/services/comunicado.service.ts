@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
@@ -18,17 +18,21 @@ export class ComunicadoService {
   constructor() { }
 
   /**
-   * 🔐 Extrae de forma segura el token del almacenamiento local para el interceptor
+   * 🔐 Extrae de forma segura el token del almacenamiento local
    */
   get token(): string {
     return localStorage.getItem('token') || '';
   }
 
-  get headers() {
+   /**
+   * 🎯 CORRECCIÓN BIEN ESTRUCTURADA DE CABECERAS PARA ANGULAR
+   */
+  private getOpcionesHttp() {
     return {
-      headers: {
-        'x-token': this.token
-      }
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'x-token': this.token // 🛡️ Sincroniza al 100% con tu validarJWT del backend
+      })
     };
   }
 
@@ -38,16 +42,17 @@ export class ComunicadoService {
    */
   crearComunicado(comunicado: Comunicado): Observable<any> {
     const url = `${this.apiUrl}/enviar-global`;
-    return this.http.post<any>(url, comunicado, this.headers);
+    // Pasamos el método generador de opciones corregido en el tercer parámetro
+    return this.http.post<any>(url, comunicado, this.getOpcionesHttp());
   }
 
-  /**
-   * 📊 OBTENER HISTORIAL DE COMUNICADOS EXPEDIDOS (Para la Pestaña 3 del Modal)
+   /**
+   * 📊 OBTENER HISTORIAL DE COMUNICADOS EXPEDIDOS
    * GET: /api/comunicados/mis-comunicados?page=X
    */
   obtenerMisComunicados(pagina: number = 1): Observable<any> {
     const url = `${this.apiUrl}/mis-comunicados?page=${pagina}`;
-    return this.http.get<any>(url, this.headers); 
+    return this.http.get<any>(url, this.getOpcionesHttp()); 
   }
 
   /**
@@ -56,7 +61,7 @@ export class ComunicadoService {
    */
   deleteComunicado(id: string): Observable<any> {
     const url = `${this.apiUrl}/delete/${id}`;
-    return this.http.delete<any>(url, this.headers);
+    return this.http.delete<any>(url, this.getOpcionesHttp());
   }
 
 

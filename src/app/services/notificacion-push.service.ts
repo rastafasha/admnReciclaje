@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 const claveVapidApi = environment.VAPI_KEY_PUBLIC;
 // 🟢 ALINEADO: Apunta dinámicamente al módulo de notificaciones push de tu API unificada
-const urlBackend = `${environment.apiUrl}/notificaciones/notipush/save-subscription`;
+const urlBackend = `${environment.apiUrl}/notificaciones/suscribir`;
 
 @Injectable({
   providedIn: 'root'

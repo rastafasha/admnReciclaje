@@ -28,7 +28,7 @@ export class ModalNotificacionesComponent implements OnChanges {
   notificacionForm: FormGroup = this.fb.group({
     titulo: ['', [Validators.required]],
     mensaje: ['', [Validators.required]],
-    tipo_eco: ['AVISO_GENERAL', [Validators.required]], // Campo UX para gamificación
+    tipo_eco: ['AVISO_GENERAL', [Validators.required]], // Mapea directo a los nuevos tipos
     notificado_push: [false]
   });
 
@@ -59,20 +59,17 @@ export class ModalNotificacionesComponent implements OnChanges {
     const payload: Comunicado = {
       titulo: formValues.titulo,
       mensaje: formValues.mensaje,
-      tipo: formValues.tipo_eco === 'URGENTE' ? 'URGENTE' : 'CARTELERA', // Homologa a tus enums válidos
-      alcance_residencia: 'TODOS',
-      alcance_torre: 'AMBAS',
+      tipo: formValues.tipo_eco, // Viaja limpio ('SORTEO', 'URGENTE', etc.)
       notificado_push: formValues.notificado_push
     };
-
     this.comunicadoService.crearComunicado(payload).subscribe({
       next: (resp) => {
         Swal.fire({
           icon: 'success',
           title: '¡Publicado con Éxito!',
-          text: formValues.notificado_push 
-            ? 'El comunicado se guardó en Atlas y se dispararon los banners push flotantes.' 
-            : 'El aviso ha sido fijado con éxito en la cartelera digital.',
+          text: formValues.notificado_push
+            ? 'El comunicado se guardó en Atlas y los smartphones recibieron el globo push.'
+            : 'El aviso ha sido fijado con éxito en la cartelera digital de los participantes.',
           timer: 2500,
           showConfirmButton: false
         });
@@ -82,11 +79,11 @@ export class ModalNotificacionesComponent implements OnChanges {
         this.cerrar();
       },
       error: (err) => {
-        console.error(err);
+        console.error('❌ Error enviando el comunicado:', err);
         Swal.fire({
           icon: 'error',
           title: 'Error al enviar',
-          text: 'No se pudo despachar el aviso. Revisa los registros del servidor.'
+          text: 'No se pudo despachar el aviso. Revisa las cabeceras del servidor.'
         });
       }
     });
@@ -107,7 +104,7 @@ export class ModalNotificacionesComponent implements OnChanges {
       if (backdrop) {
         backdrop.remove(); // Lo eliminamos por completo del DOM
       }
-      
+
       // Le devolvemos el scroll normal a la página quitando la clase de Bootstrap
       document.body.classList.remove('modal-open');
       document.body.style.overflow = '';
@@ -117,7 +114,7 @@ export class ModalNotificacionesComponent implements OnChanges {
 
   actualizarHistorial() {
     this.comunicadoService.obtenerMisComunicados(1).subscribe((resp: any) => {
-      this.historial = resp.comunicados || resp || []; 
+      this.historial = resp.comunicados || resp || [];
       this.totalComunicados = resp.total || this.historial.length;
     });
   }

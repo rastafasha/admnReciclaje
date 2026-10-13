@@ -36,8 +36,11 @@
             <div class="form-group mb-3">
                 <label class="font-weight-bold text-gray-700 small">Categoría / Tipo de Aviso</label>
                 <select formControlName="tipo_eco" class="form-control">
-                    <option value="AVISO_GENERAL">📣 Aviso General de la Campaña</option>
-                    <option value="URGENTE">⚠️ Comunicado Urgente (Alerta Prioritaria)</option>
+                     <option value="AVISO_GENERAL">📣 Aviso General de la Campaña</option>
+                <option value="SORTEO">🎉 Convocatoria a Sorteo UCC</option>
+                <option value="PREMIO_MERCADONA">🛒 Alerta de Premios Mercadona</option>
+                <option value="MANTENIMIENTO_PWA">⚙️ Mantenimiento de la Plataforma</option>
+                <option value="URGENTE">⚠️ Comunicado Urgente (Prioritario)</option>
                 </select>
             </div>
 
@@ -82,18 +85,26 @@
 
                     <!-- BANNER PUSH SIMULADO -->
                     <div class="card border-0 shadow-sm p-2 rounded-lg bg-light-eco border-left-4 border-success animate__animated animate__bounceIn">
-                        <div class="d-flex align-items-center gap-2 mb-1">
-                            <img src="assets/icons/icon-72x72.png" class="rounded" style="width: 20px; height: 20px;" alt="App Icon">
-                            <span class="font-weight-bold text-success text-uppercase" style="font-size: 9px; letter-spacing: 0.5px;">
-                                {{ notificacionForm.get('tipo_eco')?.value?.replace('_', ' ') }}
-                            </span>
+                         <div class="pwa-toast-preview p-3 rounded-3 text-white mb-4 shadow" 
+                            [ngClass]="{
+                                'bg-success': notificacionForm.get('tipo_eco')?.value === 'SORTEO',
+                                'bg-warning text-dark': notificacionForm.get('tipo_eco')?.value === 'MANTENIMIENTO_PWA',
+                                'bg-danger': notificacionForm.get('tipo_eco')?.value === 'URGENTE',
+                                'bg-info': notificacionForm.get('tipo_eco')?.value === 'PREMIO_MERCADONA',
+                                'bg-primary': notificacionForm.get('tipo_eco')?.value === 'AVISO_GENERAL'
+                            }">
+                            <div class="d-flex align-items-center gap-2 mb-1">
+                            <span class="fw-bold small">🔔 {{ notificacionForm.get('tipo_eco')?.value?.replace('_', ' ') }}</span>
+                            <span class="ms-auto small opacity-75">Ahora</span>
+                            </div>
+                            <h6 class="fw-bold mb-1 text-truncate">{{ notificacionForm.get('titulo')?.value || 'Sin Título' }}</h6>
+                            <p class="mb-0 small line-clamp-3">{{ notificacionForm.get('mensaje')?.value || 'Escribe un mensaje en la pestaña anterior para previsualizar el banner móvil en tiempo real...' }}</p>
                         </div>
-                        <h6 class="font-weight-bold text-gray-900 mb-1" style="font-size: 12px; line-height: 1.2;">
-                            {{ notificacionForm.get('titulo')?.value || 'Sin Título' }}
-                        </h6>
-                        <p class="text-muted mb-0 small text-justify" style="font-size: 10px; line-height: 1.3;">
-                            {{ notificacionForm.get('mensaje')?.value || 'Escribe un mensaje en la pestaña anterior para previsualizar el banner móvil en tiempo real...' }}
-                        </p>
+                        <!-- Simulación del Header que calibraste -->
+                        <div class="mock-header bg-primary text-white p-2 rounded d-flex justify-content-between align-items-center small">
+                            <span>☰ Reto Eco</span>
+                            <span>🔔 <span class="badge bg-danger rounded-circle">1</span></span>
+                        </div>
                     </div>
 
                     <!-- Botón Simulador de Cierre en Teléfono -->
@@ -126,7 +137,13 @@
                             <td class="font-weight-bold text-gray-900">{{ item.titulo }}</td>
                             <td class="text-center">
                                 <span class="badge px-2 py-1 text-uppercase font-weight-bold"
-                                      [ngClass]="item.tipo === 'URGENTE' ? 'bg-danger text-white' : 'bg-primary text-white'">
+                                      [ngClass]="{
+                              'bg-success-subtle text-success': item.tipo === 'SORTEO',
+                              'bg-danger-subtle text-danger': item.tipo === 'URGENTE',
+                              'bg-info-subtle text-info': item.tipo === 'PREMIO_MERCADONA',
+                              'bg-warning-subtle text-warning': item.tipo === 'MANTENIMIENTO_PWA',
+                              'bg-primary-subtle text-primary': item.tipo === 'AVISO_GENERAL'
+                            }">
                                     {{ item.tipo }}
                                 </span>
                             </td>
