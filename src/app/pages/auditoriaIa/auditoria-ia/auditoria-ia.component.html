@@ -1,0 +1,158 @@
+<!-- =======| Main |======= -->
+<div class="container animated fadeInUp" id="main" class="main" role="main" name="users">
+
+    <div class="col-xs-12">
+
+        <app-backButtn [title]="title"></app-backButtn>
+
+        <div class="clear"></div>
+
+        <section class="section dashboard">
+            <!-- projects -->
+            <div class="container-fluid p-4">
+
+                <!-- Encabezado de la Sección -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h3 class="mb-1 text-dark fw-bold">🤖 Monitor de Auditoría por IA</h3>
+                        <p class="text-muted mb-0">Supervisa las validaciones automáticas de Gemini y las imágenes
+                            subidas por los usuarios.</p>
+                    </div>
+                    <button class="btn btn-primary shadow-sm" (click)="cargarHistorialIA()" [disabled]="cargando()">
+                       <i class="fa-solid fa-arrows-rotate"></i> Forzar Sincronización
+                    </button>
+                </div>
+
+                @if (cargando()) {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-success" role="status"></div>
+                    <p class="mt-2 text-muted small fw-medium">Leyendo colecciones distribuidas en Atlas...</p>
+                </div>
+                } @else {
+
+                <!-- Contenedor Principal de la Tabla -->
+                <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light text-uppercase fs-7 fw-bold text-secondary">
+                                <tr>
+                                    <th class="ps-4">Participante</th>
+                                    <th>Bloque / Categoría</th>
+                                    <th>Detalle del Plato</th>
+                                    <th>Estado de IA</th>
+                                    <th>Veredicto Gemini</th>
+                                    <th class="text-center pe-4">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="fs-6">
+                                @for (reg of registros(); track reg.id || $index) {
+                                <tr>
+                                    <!-- Bloque Usuario (Populate) -->
+                                    <td class="ps-4">
+                                        <div class="fw-bold text-dark">{{ reg.usuario?.username || 'Anónimo /
+                                            Descalificado' }}</div>
+                                        <small class="text-muted d-block" style="font-size: 0.8rem;">{{
+                                            reg.usuario?.email || 'Sín credenciales' }}</small>
+                                    </td>
+
+                                    <!-- Comida e Iconografía de Enums -->
+                                    <td>
+                                        <span class="badge bg-dark-subtle text-dark px-2 py-1 mb-1">{{ reg.comida
+                                            }}</span>
+                                        <div class="text-muted small" style="font-size: 0.75rem;">🏷️ {{ reg.categoria
+                                            }}</div>
+                                    </td>
+
+                                    <!-- Campos de Texto del Coggle -->
+                                    <td style="max-width: 240px;">
+                                        <div class="fw-semibold text-truncate text-dark">{{ reg.nombreItem }}</div>
+                                        <small class="text-muted text-truncate d-block" style="font-size: 0.8rem;">{{
+                                            reg.descripcion }}</small>
+                                    </td>
+
+                                    <!-- Badges de Validación Dinámicos -->
+                                    <td>
+                                        @if (reg.estado === 'APROBADO') {
+                                        <span
+                                            class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1">✅
+                                            APROBADO</span>
+                                        } @else if (reg.estado === 'RECHAZADO') {
+                                        <span
+                                            class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1">⛔
+                                            RECHAZADO</span>
+                                        } @else {
+                                        <span
+                                            class="badge bg-warning-subtle text-warning border border-warning-subtle px-2 py-1">⏳
+                                            PENDIENTE</span>
+                                        }
+                                    </td>
+
+                                    <!-- Dictamen de Gemini -->
+                                    <td class="text-secondary small" style="max-width: 220px; font-size: 0.85rem;">
+                                        <span class="text-wrap d-block text-truncate-2">"{{ reg.motivoIA || 'Sin
+                                            análisis disponible' }}"</span>
+                                    </td>
+
+                                    <!-- Accionador del Modal Fotográfico -->
+                                    <td class="text-center pe-4">
+                                        <button class="btn btn-sm btn-outline-secondary rounded-2"
+                                            (click)="abrirEvidencia(reg)">
+                                            📸 Inspeccionar
+                                        </button>
+                                    </td>
+                                </tr>
+                                } @empty {
+                                <tr>
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        No hay hábitos o registros cargados en el historial de Atlas para auditar.
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                }
+            </div>
+            <!-- End projects -->
+
+        </section>
+    </div>
+
+</div>
+<!--/main-->
+
+<!-- 🎯 POPUP DE INSPECCIÓN MULTIMEDIA (Bootstrap Modal compatible con Angular 19) -->
+@if (modalAbierto() && registroSeleccionado()) {
+<div class="modal fade show d-block" style="background: rgba(0, 0, 0, 0.65);" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-3">
+
+            <div class="modal-header bg-dark text-white py-3">
+                <h6 class="modal-title mb-0 fw-bold">🔍 Evidencia: {{ registroSeleccionado()?.nombreItem }}</h6>
+                <button type="button" class="btn-close btn-close-white" (click)="cerrarModal()"></button>
+            </div>
+
+            <div class="modal-body bg-light text-center p-4">
+                <!-- Renderizado directo de la imagen optimizada por tu controlador en Cloudinary -->
+                <img [src]="registroSeleccionado()?.fotoUrl" alt="Evidencia Multimedia"
+                    class="img-fluid rounded-3 shadow-sm mb-3 border"
+                    style="max-height: 350px; object-fit: cover; width: 100%;" />
+
+                <div class="p-3 bg-white rounded-3 border-start border-success border-4 text-start shadow-xs">
+                    <span class="text-uppercase fw-bold text-muted d-block mb-1"
+                        style="font-size: 0.7rem; letter-spacing: 0.5px;">Conclusión del Robot AI:</span>
+                    <p class="mb-0 text-dark small font-monospace" style="line-height: 1.4;">
+                        {{ registroSeleccionado()?.motivoIA }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="modal-footer bg-light border-top-0 py-2">
+                <button type="button" class="btn btn-sm btn-secondary px-3" (click)="cerrarModal()">Cerrar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+}

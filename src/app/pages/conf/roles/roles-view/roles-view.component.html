@@ -63,14 +63,14 @@
                                     <td>
                                         <span class="badge bg-dark" *ngIf="user.role === 'SUPERADMIN'">SuperAdmin</span>
                                         <span class="badge bg-primary" *ngIf="user.role === 'ADMIN'">Admin</span>
-                                        <span class="badge bg-success" *ngIf="user.role === 'PARTNER'">Socio</span>
+                                        <span class="badge bg-success" *ngIf="user.role === 'EDITOR'">Editor</span>
                                         <span class="badge bg-danger" *ngIf="user.role === 'USER'">Invitado</span>
                                     </td>
                                     <td>
                                         <select class="form-control" [(ngModel)]="user.role" (change)="cambiarRole(user)">
                                           <option value="SUPERADMIN">Super Admin</option>
                                           <option value="ADMIN">Admin</option>
-                                          <option value="PARTNER">Socio</option>
+                                          <option value="EDITOR">Editor</option>
                                           <option value="USER">Invitado</option>
                                         </select>
                                     </td>

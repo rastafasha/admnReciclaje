@@ -30,6 +30,7 @@ import { GamificacionModule } from './gamificacion/gamificacion.module';
 import { TipsModule } from './tips/tips.module';
 import { ReglasModule } from './reglas/reglas.module';
 import { TerminosModule } from './terminos/terminos.module';
+import { AuditoriaIaModule } from './auditoriaIa/auditoria-ia.module';
 
 @NgModule({ 
     declarations: [
@@ -64,7 +65,8 @@ import { TerminosModule } from './terminos/terminos.module';
         GamificacionModule,
         TipsModule,
         ReglasModule,
-        TerminosModule
+        TerminosModule,
+        AuditoriaIaModule
     ], 
         providers: [
         provideHttpClient(withInterceptorsFromDi())

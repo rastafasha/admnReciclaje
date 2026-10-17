@@ -31,7 +31,7 @@ export class AuthService {
     return localStorage.getItem('token') || '';
   }
 
-  get role(): 'SUPERADMIN' | 'ADMIN' | 'USER' | 'PARTNER' {
+  get role(): 'SUPERADMIN' | 'ADMIN' | 'USER' | 'EDITOR' {
     return this.usuario.role;
   }
 

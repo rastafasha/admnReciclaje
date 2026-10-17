@@ -13,6 +13,7 @@ import { RetadorComponent } from './gamificacion/retador/retador.component';
 import { TipsListaComponent } from './tips/tips-lista/tips-lista.component';
 import { ReglasListComponent } from './reglas/reglas-list/reglas-list.component';
 import { TerminosListComponent } from './terminos/terminos-list/terminos-list.component';
+import { AuditoriaIaComponent } from './auditoriaIa/auditoria-ia/auditoria-ia.component';
 
 
 
@@ -36,6 +37,7 @@ const childRoutes: Routes = [
   { path: 'tips', component: TipsListaComponent, data: { tituloPage: 'Consejos' } },
   { path: 'reglas', component: ReglasListComponent, data: { tituloPage: 'Reglas' } },
   { path: 'terminos', component: TerminosListComponent, data: { tituloPage: 'Terminos' } },
+  { path: 'auditoria-ia', component: AuditoriaIaComponent, data: { tituloPage: 'Auditoria Ia' } },
 
   { path: 'buscar', component: BusquedaComponent, data: { tituloPage: 'Busquedas' } },
   { path: 'buscar/:termino', component: BusquedaComponent, data: { tituloPage: 'Busquedas' } },

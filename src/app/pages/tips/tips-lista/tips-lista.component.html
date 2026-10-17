@@ -52,12 +52,12 @@
                                         </span>
                                     </td>
                                     <td class="text-center pe-4">
-                                        <button type="button" class="btn btn-sm btn-circle btn-outline-primary border-0"
+                                        <button type="button" class="btn btn-sm btn-circle btn-outline-primary border-0 me-2"
                                         data-bs-toggle="modal" data-bs-target="#editTipModal" 
-                                            (click)="abrirModalEditar(tip)">✏️</button>
+                                            (click)="abrirModalEditar(tip)"><i class="fa-solid fa-pencil"></i></button>
                                         <button type="button" class="btn btn-sm btn-circle btn-outline-danger border-0"
                                        
-                                            (click)="onDeleteProject(tip)">✏️</button>
+                                            (click)="onDeleteProject(tip)"><i class="fa-solid fa-trash"></i></button>
                                     </td>
                                 </tr>
                                 } @empty {
