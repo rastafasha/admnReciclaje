@@ -1,0 +1,82 @@
+<div class="modal fade show d-block animate__animated animate__fadeIn" id="editTipModal" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.55); z-index: 1055;">
+  <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-content border-0 shadow-lg">
+      
+      <!-- ENCABEZADO -->
+      <div class="modal-header bg-light border-bottom p-3">
+        <h5 class="modal-title font-weight-bold text-gray-900">
+          <i class="fas fa-lightbulb text-success mr-1"></i> {{ title }}: {{tipSeleccionado.titulo}}
+        </h5>
+        <button type="button" class="btn-close" (click)="onClose()" aria-label="Close"></button>
+      </div>
+
+      <!-- FORMULARIO REACTIVO -->
+      <form [formGroup]="tipForm" (ngSubmit)="handleSubmit()">
+        <div class="modal-body p-4 text-start">
+          
+          <!-- TÍTULO -->
+          <div class="mb-3">
+      <label class="form-label">Nombre / Título del Tip *</label>
+      <input 
+        type="text" 
+        class="form-control" 
+        formControlName="titulo" 
+        placeholder="Ej. Reduce el uso de plástico">
+      
+      @if (tipForm.get('titulo')?.invalid && tipForm.get('titulo')?.touched) {
+        <small class="text-danger">El título es requerido (mínimo 5 caracteres).</small>
+      }
+    </div>
+
+          <!-- DESCRIPCIÓN -->
+          <div class="mb-3">
+      <label class="form-label">Especificaciones / Cuerpo Informativo *</label>
+      <textarea 
+        class="form-control" 
+        formControlName="descripcion" 
+        rows="4" 
+        placeholder="Escribe los detalles aquí..."></textarea>
+
+      @if (tipForm.get('descripcion')?.invalid && tipForm.get('descripcion')?.touched) {
+        <small class="text-danger">La descripción es requerida (mínimo 10 caracteres).</small>
+      }
+    </div>
+
+          <!-- INTERRUPTOR SMARTPHONE -->
+          <div class="mb-3">
+      <h6 class="form-label">Visibilidad en PWA</h6>
+      <p class="text-muted small">Determina si se muestra en la cartelera del Home móvil.</p>
+      
+      <div class="form-check form-switch">
+        <input 
+          class="form-check-input" 
+          type="checkbox" 
+          id="switchActivo"
+          formControlName="activo"
+          (change)="alternarEstadoActivo($event)">
+        <label class="form-check-input-label" for="switchActivo">
+          {{ tipForm.get('activo')?.value ? 'Activo / Visible' : 'Inactivo / Oculto' }}
+        </label>
+      </div>
+    </div>
+
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="modal-footer bg-light border-top p-3">
+          <button type="button" class="btn btn-outline-secondary px-4 fw-bold" (click)="onClose()">
+            Cerrar
+          </button>
+          <button 
+            type="submit" 
+            class="btn btn-success px-4 fw-bold shadow" 
+            [disabled]="tipForm.invalid || isLoading">
+            <!-- Texto dinámico calcado de tu lógica de proyectos -->
+            {{ tipSeleccionado ? 'Actualizar y Continuar' : 'Crear y Continuar' }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

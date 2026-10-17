@@ -10,6 +10,9 @@ import { BusquedaComponent } from './busqueda/busqueda.component';
 import { AuthGuard } from '../guards/auth.guard';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 import { RetadorComponent } from './gamificacion/retador/retador.component';
+import { TipsListaComponent } from './tips/tips-lista/tips-lista.component';
+import { ReglasListComponent } from './reglas/reglas-list/reglas-list.component';
+import { TerminosListComponent } from './terminos/terminos-list/terminos-list.component';
 
 
 
@@ -30,6 +33,9 @@ const childRoutes: Routes = [
   { path: 'roles', component: RolesViewComponent, data: { tituloPage: 'Roles' } },
 
   { path: 'notificaciones', component: NotificacionesComponent, data: { tituloPage: 'Notificaciones' } },
+  { path: 'tips', component: TipsListaComponent, data: { tituloPage: 'Consejos' } },
+  { path: 'reglas', component: ReglasListComponent, data: { tituloPage: 'Reglas' } },
+  { path: 'terminos', component: TerminosListComponent, data: { tituloPage: 'Terminos' } },
 
   { path: 'buscar', component: BusquedaComponent, data: { tituloPage: 'Busquedas' } },
   { path: 'buscar/:termino', component: BusquedaComponent, data: { tituloPage: 'Busquedas' } },

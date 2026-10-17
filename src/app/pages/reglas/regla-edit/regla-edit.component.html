@@ -1,0 +1,89 @@
+<!-- ID del modal configurado para que la función onClose de Bootstrap lo cierre de forma nativa -->
+<div class="modal fade show d-block" id="editReglaModal" style="background: rgba(0,0,0,0.5);" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 class="modal-title">⚙️ {{ title }} {{ reglaSeleccionada ? '(Días: ' + reglaSeleccionada.diasRequeridos + ')' : '' }}</h5>
+        <button type="button" class="btn-close" (click)="onClose()"></button>
+      </div>
+
+      <form [formGroup]="reglaForm" (ngSubmit)="handleSubmit()">
+        <div class="modal-body">
+          
+          <!-- Control oculto para el identificador único de Atlas -->
+          <input type="hidden" formControlName="id">
+
+          <!-- Campo Días Requeridos -->
+          <div class="mb-3">
+            <label class="form-label">Días Mínimos Requeridos de Participación *</label>
+            <input 
+              type="number" 
+              class="form-control" 
+              formControlName="diasRequeridos" 
+              placeholder="Ej. 21">
+            
+            @if (reglaForm.get('diasRequeridos')?.invalid && reglaForm.get('diasRequeridos')?.touched) {
+              <small class="text-danger d-block mt-1">Es necesario especificar una cantidad válida de días (mínimo 1).</small>
+            }
+          </div>
+
+          <!-- Premio Primer Lugar -->
+          <div class="mb-3">
+            <label class="form-label">Especificaciones del Premio - 1º Lugar *</label>
+            <textarea 
+              class="form-control" 
+              formControlName="primerLugar" 
+              rows="2" 
+              placeholder="Detalla el premio principal aquí..."></textarea>
+            
+            @if (reglaForm.get('primerLugar')?.invalid && reglaForm.get('primerLugar')?.touched) {
+              <small class="text-danger d-block mt-1">Las especificaciones del primer premio son requeridas (mínimo 10 caracteres).</small>
+            }
+          </div>
+
+          <!-- Premio Segundo Lugar -->
+          <div class="mb-3">
+            <label class="form-label">Especificaciones del Premio - 2º Lugar *</label>
+            <textarea 
+              class="form-control" 
+              formControlName="segundoLugar" 
+              rows="2" 
+              placeholder="Detalla el segundo premio aquí..."></textarea>
+            
+            @if (reglaForm.get('segundoLugar')?.invalid && reglaForm.get('segundoLugar')?.touched) {
+              <small class="text-danger d-block mt-1">Las especificaciones del segundo premio son requeridas (mínimo 10 caracteres).</small>
+            }
+          </div>
+
+          <!-- Premio Tercer Lugar -->
+          <div class="mb-3">
+            <label class="form-label">Especificaciones del Premio - 3º Lugar *</label>
+            <textarea 
+              class="form-control" 
+              formControlName="tercerLugar" 
+              rows="2" 
+              placeholder="Detalla el tercer premio aquí..."></textarea>
+            
+            @if (reglaForm.get('tercerLugar')?.invalid && reglaForm.get('tercerLugar')?.touched) {
+              <small class="text-danger d-block mt-1">Las especificaciones del tercer premio son requeridas (mínimo 10 caracteres).</small>
+            }
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="onClose()">Cerrar</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+            @if (isLoading) {
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            } @else {
+              {{ reglaSeleccionada ? 'Actualizar y Continuar' : 'Crear y Continuar' }}
+            }
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>

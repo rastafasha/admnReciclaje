@@ -1,0 +1,83 @@
+<!-- =======| Main |======= -->
+<div class="container animated fadeInUp" id="main" class="main" role="main" name="users">
+
+    <div class="col-xs-12">
+
+        <app-backButtn [title]="title"></app-backButtn>
+
+        <div class="clear"></div>
+
+        <section class="section dashboard">
+            <!-- projects -->
+            <div class="container-fluid py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>💡 Reglas del Juego</h2>
+                    <p class="text-muted">Administra las Reglas del juego de reciclaje Mercadona / UCC.</p>
+                    <button class="btn btn-primary" (click)="abrirModalCrear()">
+                        ➕ Añadir Regla
+                    </button>
+                </div>
+
+                @if (isLoading$ | async) {
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2">Consultando Atlas...</p>
+                </div>
+                } @else {
+                <div class="card shadow-sm">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Días Requeridos</th>
+                                    <th>1º Lugar</th>
+                                    <th>2º Lugar</th>
+                                    <th>3º Lugar</th>
+                                    <th class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (regla of (reglas$ | async); track regla._id || $index) {
+                                <tr>
+                                    <td><strong>{{ regla.diasRequeridos }} días</strong></td>
+                                    <td class="text-truncate" style="max-width: 200px;">{{ regla.primerLugar }}</td>
+                                    <td class="text-truncate" style="max-width: 200px;">{{ regla.segundoLugar }}</td>
+                                    <td class="text-truncate" style="max-width: 200px;">{{ regla.tercerLugar }}</td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-warning me-2"
+                                            (click)="abrirModalEditar(regla)">
+                                            ✏️ Editar
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" (click)="onDeleteProject(regla)">
+                                            🗑️ Borrar
+                                        </button>
+                                    </td>
+                                </tr>
+                                } @empty {
+                                <tr>
+                                    <td colspan="5" class="text-center py-4 text-muted">
+                                        No hay reglas registradas aún.
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                }
+            </div>
+            <!-- End projects -->
+
+        </section>
+    </div>
+
+</div>
+<!--/main-->
+
+@if (modalAbierto) {
+  <app-regla-edit
+    [reglaSeleccionada]="reglaSeleccionado" 
+    (refreshReglaList)="ngOnInit()"
+    (closeModal)="cerrarModal()">
+  </app-regla-edit>
+}

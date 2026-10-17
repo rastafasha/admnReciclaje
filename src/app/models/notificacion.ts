@@ -1,4 +1,4 @@
-export interface NotificacionCampana {
+export class NotificacionCampana {
   _id?: string;
   titulo: string;
   mensaje: string;

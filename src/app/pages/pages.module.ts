@@ -27,6 +27,9 @@ import { UsersComponent } from './users/users.component';
 import { BusquedaComponent } from './busqueda/busqueda.component';
 import { NotificacionesComponent } from './notificaciones/notificaciones.component';
 import { GamificacionModule } from './gamificacion/gamificacion.module';
+import { TipsModule } from './tips/tips.module';
+import { ReglasModule } from './reglas/reglas.module';
+import { TerminosModule } from './terminos/terminos.module';
 
 @NgModule({ 
     declarations: [
@@ -59,6 +62,9 @@ import { GamificacionModule } from './gamificacion/gamificacion.module';
         ComponentsModule,
         NgxPaginationModule,
         GamificacionModule,
+        TipsModule,
+        ReglasModule,
+        TerminosModule
     ], 
         providers: [
         provideHttpClient(withInterceptorsFromDi())

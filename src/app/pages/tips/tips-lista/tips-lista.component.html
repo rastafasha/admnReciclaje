@@ -1,0 +1,85 @@
+<!-- =======| Main |======= -->
+<div class="container animated fadeInUp" id="main" class="main" role="main" name="users">
+
+    <div class="col-xs-12">
+
+        <app-backButtn [title]="title"></app-backButtn>
+
+        <div class="clear"></div>
+
+        <section class="section dashboard">
+            <!-- projects -->
+            <div class="container-fluid py-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 text-start">
+                    <div>
+                        <h2 class="font-weight-bold text-gray-900 mb-0">💡 Consejos y Píldoras Ecológicas</h2>
+                        <p class="text-muted mb-0">Administra los tips ambientales de reciclaje Mercadona / UCC.</p>
+                    </div>
+                    <button type="button" class="btn btn-success fw-bold shadow" data-bs-toggle="modal" data-bs-target="#editTipModal" (click)="abrirModalCrear()">
+                        <i class="fas fa-plus mr-1"></i> Añadir Tip
+                    </button>
+                </div>
+
+                <!-- TABLA EN ESPEJO CON EL OBSERVER -->
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    @if (isLoading$ | async) {
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-success" role="status"></div>
+                        <p class="text-muted mt-2">Consultando Atlas...</p>
+                    </div>
+                    } @else {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 text-start">
+                            <thead class="table-light text-secondary small fw-bold">
+                                <tr>
+                                    <th scope="col" class="ps-4">Tip Ecológico</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col" class="text-center pe-4">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (tip of (tips$ | async); track tip._id || $index) {
+                                <tr>
+                                    <td class="ps-4 py-3">
+                                        <div class="fw-bold text-dark">{{ tip.titulo }}</div>
+                                        <small class="text-muted d-block text-truncate" style="max-width: 500px;">{{
+                                            tip.descripcion }}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge px-3 py-1.5 rounded-pill fw-bold"
+                                            [ngClass]="tip.activo ? 'bg-soft-success text-success' : 'bg-soft-secondary text-secondary'">
+                                            {{ tip.activo ? '● Activo' : '○ Oculto' }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center pe-4">
+                                        <button type="button" class="btn btn-sm btn-circle btn-outline-primary border-0"
+                                        data-bs-toggle="modal" data-bs-target="#editTipModal" 
+                                            (click)="abrirModalEditar(tip)">✏️</button>
+                                        <button type="button" class="btn btn-sm btn-circle btn-outline-danger border-0"
+                                       
+                                            (click)="onDeleteProject(tip)">✏️</button>
+                                    </td>
+                                </tr>
+                                } @empty {
+                                <tr>
+                                    <td colspan="3" class="text-center py-5 text-muted">No hay tips registrados aún.
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    }
+                </div>
+            </div>
+            <!-- End projects -->
+
+        </section>
+    </div>
+
+</div>
+<!--/main-->
+
+@if (modalAbierto) {
+    <app-tips-edit [tipSeleccionado]="tipSeleccionado" (closeModal)="cerrarModal()"  (refreshTipList)="ngOnInit()" ></app-tips-edit>
+}

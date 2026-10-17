@@ -1,0 +1,101 @@
+<div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      
+      <div class="modal-header bg-light">
+        <h5 class="modal-title">⚖️ Gestión de Términos, Condiciones y Políticas</h5>
+        <button type="button" class="btn-close" (click)="onClose()"></button>
+      </div>
+
+      <form [formGroup]="terminosForm" (ngSubmit)="handleSubmit()">
+        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+          <input type="hidden" formControlName="id">
+
+          <!-- Fila de Cabecera: Título Global y Versión -->
+          <div class="row mb-3">
+            <div class="col-md-9">
+              <label class="form-label font-weight-bold">Título del Documento Legal *</label>
+              <input type="text" class="form-control" formControlName="tituloGlobal" placeholder="Ej. Términos de Uso y Políticas">
+              @if (terminosForm.get('tituloGlobal')?.invalid && terminosForm.get('tituloGlobal')?.touched) {
+                <small class="text-danger">El título global es requerido.</small>
+              }
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Versión de Control *</label>
+              <input type="text" class="form-control" formControlName="version" placeholder="Ej. v2.4.0">
+              @if (terminosForm.get('version')?.invalid && terminosForm.get('version')?.touched) {
+                <small class="text-danger">Falta la versión.</small>
+              }
+            </div>
+          </div>
+
+          <!-- Introducción Global -->
+          <div class="mb-4">
+            <label class="form-label">Introducción / Preámbulo Legal *</label>
+            <textarea class="form-control" formControlName="introduccion" rows="3" placeholder="Escribe el párrafo introductorio..."></textarea>
+            @if (terminosForm.get('introduccion')?.invalid && terminosForm.get('introduccion')?.touched) {
+              <small class="text-danger">La introducción es obligatoria.</small>
+            }
+          </div>
+
+          <hr>
+
+          <!-- SECCIÓN DINÁMICA: Cláusulas y Artículos -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6>Secciones y Artículos del Acuerdo</h6>
+            <button type="button" class="btn btn-sm btn-outline-success" (click)="agregarSeccion()">
+              ➕ Añadir Nueva Sección
+            </button>
+          </div>
+
+          <!-- Contenedor del FormArray -->
+          <div formArrayName="secciones">
+            @for (seccion of secciones.controls; track seccion.value._id || $index; let i = $index) {
+
+              <div [formGroupName]="i" class="card p-3 mb-3 bg-light border-0 shadow-sm position-relative">
+                
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="badge bg-secondary">Sección #{{ i + 1 }}</span>
+                  <button type="button" class="btn btn-sm text-danger" (click)="removerSeccion(i)">
+                    🗑️ Eliminar Bloque
+                  </button>
+                </div>
+
+                <!-- Inputs internos de la sección -->
+                <div class="mb-2">
+                  <label class="small form-label font-weight-bold">Subtítulo / Encabezado *</label>
+                  <input type="text" class="form-control form-control-sm" formControlName="subtitulo" placeholder="Ej. 1. Registro Seguro y Puntos">
+                  @if (secciones.at(i).get('subtitulo')?.invalid && secciones.at(i).get('subtitulo')?.touched) {
+                    <small class="text-danger d-block small">El subtítulo es requerido.</small>
+                  }
+                </div>
+
+                <div>
+                  <label class="small form-label">Contenido Legal *</label>
+                  <textarea class="form-control form-control-sm" formControlName="contenido" rows="3" placeholder="Describe los lineamientos legales del artículo..."></textarea>
+                  @if (secciones.at(i).get('contenido')?.invalid && secciones.at(i).get('contenido')?.touched) {
+                    <small class="text-danger d-block small">El contenido de la cláusula es obligatorio.</small>
+                  }
+                </div>
+
+              </div>
+            } @empty {
+              <div class="alert alert-warning text-center small">
+                Alerta: No has definido ninguna sección legal. Los usuarios verán el acuerdo vacío.
+              </div>
+            }
+          </div>
+
+        </div>
+
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-secondary" (click)="onClose()">Cancelar Cambios</button>
+          <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+            {{ isLoading ? 'Sincronizando...' : 'Publicar Términos en Caliente 🚀' }}
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
