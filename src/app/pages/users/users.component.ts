@@ -29,6 +29,8 @@ export class UsersComponent implements OnInit {
 
   error: string;
   msm_error: string;
+  option_selectedd: number = 1;
+  solicitud_selectedd: any = null;
 
 
   ServerUrl = environment.apiUrl;
@@ -57,10 +59,12 @@ export class UsersComponent implements OnInit {
   }
 
   getUsers(): void {
+    this.loading = true
     this.userService.getUsuarios().subscribe(
       res =>{
         this.usuarios = res;
         error => this.error = error;
+        this.loading = false
       }
     );
   }
@@ -120,8 +124,18 @@ export class UsersComponent implements OnInit {
         }
       )
     }
-    
         
+  }
+
+  optionSelected(value: number) {
+    this.option_selectedd = value;
+    if (this.option_selectedd === 1) {
+
+      // this.ngOnInit();
+    }
+    if (this.option_selectedd === 2) {
+      this.solicitud_selectedd = null;
+    }
   }
 
  

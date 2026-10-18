@@ -41,7 +41,7 @@ export class UserProfileComponent implements OnInit {
     window.scrollTo(0,0);
     this.closeMenu();
     this.activatedRoute.params.subscribe( ({id}) => this.getUserRemoto(id));
-    this.activatedRoute.params.subscribe( ({id}) => this.getProfile(id));
+    // this.activatedRoute.params.subscribe( ({id}) => this.getProfile(id));
     
   }
 
@@ -59,8 +59,8 @@ export class UserProfileComponent implements OnInit {
     this.userService.getUserById(id).subscribe(
       res =>{
         this.usuario = res;
+        this.profile = res.profile
         error => this.error = error;
-        // console.log(this.usuario);
       }
     );
 
@@ -70,7 +70,7 @@ export class UserProfileComponent implements OnInit {
     
     this.profileService.getByUser(id).subscribe(
       res =>{
-        this.profile = res[0];
+        
         error => this.error = error;
       }
     );

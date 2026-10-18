@@ -4,24 +4,27 @@
     <div class="col-xs-12">
 
         <app-backButtn [title]="title"></app-backButtn>
-
+        <button class="btn btn-outline-primary btn-sm rounded-circle shadow-sm"
+                      (click)="modalDashboard.open()" title="Ayuda de la sección">
+                      <i class="fas fa-question"></i>
+                    </button>
         <div class="clear"></div>
 
         <section class="section dashboard">
             <!-- projects -->
             <div class="container-fluid py-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <!-- <div class="d-flex justify-content-between align-items-center mb-4">
                     <h2>💡 Reglas del Juego</h2>
                     <p class="text-muted">Administra las Reglas del juego de reciclaje Mercadona / UCC.</p>
                     <button class="btn btn-primary" (click)="abrirModalCrear()">
                         ➕ Añadir Regla
                     </button>
-                </div>
+                </div> -->
 
                 @if (isLoading$ | async) {
                 <div class="text-center py-5">
                     <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2">Consultando Atlas...</p>
+                    <p class="mt-2">Consultando Listado...</p>
                 </div>
                 } @else {
                 <div class="card shadow-sm">
@@ -81,3 +84,6 @@
     (closeModal)="cerrarModal()">
   </app-regla-edit>
 }
+
+<app-modal-instrucciones [info]="info_dashboard" sectionId="reglas"
+  #modalDashboard></app-modal-instrucciones>

@@ -4,6 +4,10 @@
     <div class="col-xs-12">
 
         <app-backButtn [title]="title"></app-backButtn>
+        <button class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" (click)="modalDashboard.open()"
+            title="Ayuda de la sección">
+            <i class="fas fa-question"></i>
+        </button>
 
         <div class="clear"></div>
 
@@ -25,7 +29,7 @@
                     @if (isLoading$ | async) {
                     <div class="text-center py-5">
                         <div class="spinner-border text-success" role="status"></div>
-                        <p class="text-muted mt-2">Consultando Atlas...</p>
+                        <p class="text-muted mt-2">Consultando Listado...</p>
                     </div>
                     } @else {
                     <div class="table-responsive">
@@ -82,4 +86,6 @@
 
 @if (modalAbierto) {
     <app-tips-edit [tipSeleccionado]="tipSeleccionado" (closeModal)="cerrarModal()"  (refreshTipList)="ngOnInit()" ></app-tips-edit>
+    
 }
+<app-modal-instrucciones [info]="info_dashboard" sectionId="consejos" #modalDashboard></app-modal-instrucciones>

@@ -2,26 +2,31 @@
 <div class="container " id="main" class="main" role="main ">
     <!-- ENCABEZADO PROPIO DEL PANEL -->
     <div class="pagetitle mb-4 justify-content-between align-items-center d-flex">
-    <div>
-        <h1 class="h3 mb-0 text-gray-800 font-weight-bold">{{ title }}</h1>
-        <p class="text-muted small mb-0">Bienvenido, <strong>{{ user.username }}</strong>! Gestiona el impacto ecológico actual.</p>
-    </div>
-    
-    <div class="d-flex align-items-center gap-3">
-        <!-- 📣 BOTÓN CORREGIDO: Usamos data-bs para garantizar compatibilidad con tu Bootstrap real -->
-        <button type="button" class="btn btn-success font-weight-bold shadow-sm d-flex align-items-center gap-2" 
-                data-bs-toggle="modal" data-bs-target="#notificacionesModal" (click)="abrirModalAviso()">
-            <i class="fas fa-bullhorn"></i> Emitir Comunicado
-        </button>
+        <div>
+            <h1 class="h3 mb-0 text-gray-800 font-weight-bold">{{ title }}</h1>
+            <p class="text-muted small mb-0">Bienvenido, <strong>{{ user.username }}</strong>! Gestiona el impacto
+                ecológico actual.</p>
+        </div>
 
-        <span class="badge badge-primary px-3 py-2 text-uppercase font-weight-bold shadow-sm mb-0">
-            {{ user.role }}
-        </span>
+        <div class="d-flex align-items-center gap-3">
+            <!-- 📣 BOTÓN CORREGIDO: Usamos data-bs para garantizar compatibilidad con tu Bootstrap real -->
+            <button type="button" class="btn btn-success font-weight-bold shadow-sm d-flex align-items-center gap-2"
+                data-bs-toggle="modal" data-bs-target="#notificacionesModal" (click)="abrirModalAviso()">
+                <i class="fas fa-bullhorn"></i> Emitir Comunicado
+            </button>
+
+            <span class="badge badge-primary px-3 py-2 text-uppercase font-weight-bold shadow-sm mb-0">
+                {{ user.role }}
+            </span>
+            <button class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" (click)="modalDashboard.open()"
+                title="Ayuda de la sección">
+                <i class="fas fa-question"></i>
+            </button>
+        </div>
     </div>
-</div>
 
     <!-- MENSAJE DE BIENVENIDA ECO-TECH -->
-    <div class="card shadow-sm border-0 rounded-lg bg-light-eco mb-4">
+    <div class="card shadow-sm border-0 rounded-lg bg-light-eco mb-4 animated fadeInUp">
         <div class="card-body p-4">
             <h5 class="font-weight-bold text-success mb-1">¡Ten un Excelente y Productivo día! ♻️</h5>
             <p class="text-muted small mb-0">Monitoreo central en vivo de rachas de hábitos, puntajes acumulados y
@@ -30,17 +35,17 @@
     </div>
 
     <!-- INDICADOR DE CARGA (SPINNER) -->
-    <div *ngIf="loadingMetricas" class="d-flex justify-content-center align-items-center py-5">
+    <div *ngIf="loadingMetricas" class="d-flex justify-content-center align-items-center py-5 animated fadeInUp">
         <div class="spinner-border text-success" role="status">
             <span class="sr-only">Sincronizando métricas con Atlas...</span>
         </div>
     </div>
 
     <!-- REJILLA DE CONTADORES GLOBALES (ELEGANTES Y ESCANEABLES) -->
-    <div class="row" *ngIf="!loadingMetricas">
+    <div class="row animated fadeInUp" *ngIf="!loadingMetricas">
 
         <!-- CARD 1: TOTAL PARTICIPANTES -->
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-3 col-md-6 mb-4 ">
             <div class="card border-left-primary shadow h-100 py-2 border-0">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -117,7 +122,7 @@
     </div>
 
     <!-- SECCIÓN ADICIONAL: VISTA RÁPIDA DE LA INTERNA COMPUESTA -->
-    <div class="row mt-2" *ngIf="!loadingMetricas">
+    <div class="row mt-2 animated fadeInUp" *ngIf="!loadingMetricas">
         <div class="col-lg-12">
             <div class="card shadow border-0 rounded-lg mb-4">
                 <div class="card-header py-3 bg-light border-0 d-flex justify-content-between align-items-center">
@@ -135,7 +140,7 @@
         </div>
     </div>
 
-    <div class="row mt-4" *ngIf="!loadingMetricas">
+    <div class="row mt-4 animated fadeInUp" *ngIf="!loadingMetricas">
 
         <!-- GRÁFICO 1: DOUGHNUT CHART (EFICIENCIA DEL PERÍODO) -->
         <div class="col-lg-5 mb-4">
@@ -177,26 +182,27 @@
 <app-pwa-notif-installer></app-pwa-notif-installer>
 
 <!-- 🛠 ESTRUCTURA DEL MODAL QUE ENCIERRA AL COMPONENTE HIJO -->
-<div class="modal fade" id="notificacionesModal" tabindex="-1" aria-labelledby="notificacionesModalLabel" aria-hidden="true">
+<div class="modal fade" id="notificacionesModal" tabindex="-1" aria-labelledby="notificacionesModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content border-0 shadow-lg" style="border-radius: 15px;">
-            
+
             <!-- CABECERA DEL MODAL -->
             <div class="modal-header bg-light border-0 py-3">
                 <h5 class="modal-title font-weight-bold text-gray-800" id="notificacionesModalLabel">
                     <i class="fas fa-bullhorn text-success mr-2"></i>Cartelera de Avisos Masivos
                 </h5>
                 <!-- Botón de cierre nativo con ID único para que Angular lo pueda clickear al terminar -->
-                <button type="button" class="btn-close" data-bs-dismiss="modal" id="btnCloseModal" aria-label="Close" (click)="cerrarModalAviso()"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" id="btnCloseModal" aria-label="Close"
+                    (click)="cerrarModalAviso()"></button>
             </div>
-            
+
             <!-- INYECCIÓN DEL COMPONENTE HIJO -->
-            <app-modal-notificaciones 
-                [notificacionSeleccionado]="comunicadoActivo"
-                (closeModal)="cerrarModalAviso()"
+            <app-modal-notificaciones [notificacionSeleccionado]="comunicadoActivo" (closeModal)="cerrarModalAviso()"
                 (comunicadoCreado)="onComunicadoDespachado()">
             </app-modal-notificaciones>
-            
+
         </div>
     </div>
 </div>
+<app-modal-instrucciones [info]="info_dashboard" sectionId="dashboard" #modalDashboard></app-modal-instrucciones>

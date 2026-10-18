@@ -8,22 +8,24 @@
 
             <!-- Bordered Tabs -->
             <div class="tab-content-set">
-                <ul class="nav ">
-
-                <li >
-                    <button class="btn btn-outline-info active" data-bs-toggle="tab" data-bs-target="#users">Usuarios</button>
-                </li>
-
-                <li >
-                    <button class="btn btn-outline-info " data-bs-toggle="tab" data-bs-target="#admin">Admin</button>
-                </li>
-            </ul>
+                <ul class="nav">
+                    <li>
+                        <a href="#" onclick="return false;" [ngClass]="{'active': option_selectedd == 1}"
+                            (click)="optionSelected(1)">
+                            <h3 class="btn btn-outline-info"> {{'Usuarios'}}</h3>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" onclick="return false;" [ngClass]="{'active': option_selectedd == 2}"
+                            (click)="optionSelected(2)">
+                            <h3 class="btn btn-outline-info">{{'Admin'}}</h3>
+                        </a>
+                    </li>
+                </ul>
             </div>
             
             <div class="tab-content pt-2">
-
-                <div class="tab-pane fade show active users" id="users">
-                    <br />
+                <div *ngIf="option_selectedd == 1">
                     <!-- usuarios -->
                     <div class="container">
                         <div class="row">
@@ -48,8 +50,8 @@
                         <div class="card recent-sales overflow-auto">
 
                             <div class="card-body">
-
-                                <table [ngClass]="loading? 'table table-borderless datatable':'table table-borderless'">
+                                <app-loading *ngIf="loading"></app-loading>
+                                <table *ngIf="!loading" [ngClass]="loading? 'table table-borderless datatable':'table table-borderless'">
                                     <thead>
                                         <tr>
 
@@ -102,9 +104,7 @@
                     </div>
                     <!-- End usuarios -->
                 </div>
-
-                <div class="tab-pane fade show active admin" id="admin">
-                    <br />
+                <div *ngIf="option_selectedd == 2">
                     <!-- usuarios -->
                     <div class="container">
                         <div class="row">
@@ -129,8 +129,8 @@
                         <div class="card recent-sales overflow-auto">
 
                             <div class="card-body">
-
-                                <table [ngClass]="loading? 'table table-borderless datatable':'table table-borderless'">
+                                <app-loading *ngIf="loading"></app-loading>
+                                <table *ngIf="!loading" [ngClass]="loading? 'table table-borderless datatable':'table table-borderless'">
                                     <thead>
                                         <tr>
 
@@ -183,6 +183,9 @@
                     </div>
                     <!-- End usuarios -->
                 </div>
+                
+
+                
 
 
             </div>

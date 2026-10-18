@@ -31,6 +31,7 @@ import { TipsModule } from './tips/tips.module';
 import { ReglasModule } from './reglas/reglas.module';
 import { TerminosModule } from './terminos/terminos.module';
 import { AuditoriaIaModule } from './auditoriaIa/auditoria-ia.module';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({ 
     declarations: [
@@ -42,6 +43,7 @@ import { AuditoriaIaModule } from './auditoriaIa/auditoria-ia.module';
         PagesComponent,
         BusquedaComponent,
         NotificacionesComponent,
+        UserProfileComponent
     ],
     exports: [
         DashboardComponent,
@@ -52,6 +54,7 @@ import { AuditoriaIaModule } from './auditoriaIa/auditoria-ia.module';
         PagesComponent,
         BusquedaComponent,
         NotificacionesComponent,
+        UserProfileComponent
     ], imports: [
         CommonModule,
         SharedModule,

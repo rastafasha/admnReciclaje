@@ -13,19 +13,22 @@ import { PieChart2Component } from './charts/pie-chart2/pie-chart2.component';
 import { ConfModule } from '../pages/conf/conf.module';
 import { SharedModule } from '../shared/shared.module';
 import { ModalNotificacionesComponent } from './modal-notificaciones/modal-notificaciones.component';
+import { ModalInstruccionesComponent } from './modal-instrucciones/modal-instrucciones.component';
 
 @NgModule({ declarations: [
         UsuariosRecientesComponent,
         LineChartComponent,
         PieChart2Component,
-        ModalNotificacionesComponent
+        ModalNotificacionesComponent,
+        ModalInstruccionesComponent
         
     ],
     exports: [
         UsuariosRecientesComponent,
         LineChartComponent,
         PieChart2Component,
-        ModalNotificacionesComponent
+        ModalNotificacionesComponent,
+        ModalInstruccionesComponent
     ], imports: [
         CommonModule,
         RouterModule,

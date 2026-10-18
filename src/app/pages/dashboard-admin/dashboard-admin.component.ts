@@ -38,6 +38,19 @@ export class DashboardAdminComponent implements OnInit {
 
 public comunicadoActivo: any = null;
 
+info_dashboard = `
+  <p>En esta sección :</p>
+          <ul>
+             <li><strong>Monitorear Retadores Activos:</strong> Controla el número total de usuarios que están participando activamente en los desafíos ecológicos en este momento.</li>
+  <li><strong>Supervisar Hábitos Completados:</strong> Revisa la cantidad de tareas de reciclaje y hábitos sustentables que los usuarios han registrado con éxito durante el día.</li>
+  <li><strong>Seguimiento de Puntos:</strong> Visualiza el acumulado de puntos ecológicos (pts) generados globalmente durante el período actual.</li>
+  <li><strong>Control de Clasificados al Sorteo:</strong> Verifica cuántos usuarios ya cumplen con los requisitos mínimos y han clasificado para los cierres de concurso y sorteos vigentes.</li>
+  <li><strong>Analizar el Historial de Impacto:</strong> Evalúa la gráfica central para entender las tendencias de reciclaje semanales y medir el crecimiento de la gamificación.</li>
+  <li><strong>Ver el Estado Global del Concurso:</strong> Consulta el gráfico de dona para saber de forma rápida cuántos usuarios ya alcanzaron sus metas de reciclaje y cuántos siguen pendientes de completarlas.</li>
+  <li><strong>Revisar la Tendencia Anual:</strong> Utiliza la gráfica lineal inferior para comparar el rendimiento de reciclaje mes a mes a lo largo del año en curso.</li>
+  <li><strong>Emitir Comunicados Urgentes:</strong> Haz clic en el botón verde superior para enviar notificaciones push o anuncios importantes directamente a todos los usuarios de la app.</li>
+          </ul>`;
+
   constructor(
     private authService: AuthService,
     private participantesService: GamificacionService // 👈 Declarado en constructor

@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 declare var bootstrap: any;
 @Component({
   selector: 'app-retador',
-  standalone:false,
+  standalone: false,
   templateUrl: './retador.component.html',
   styleUrl: './retador.component.css'
 })
@@ -21,14 +21,27 @@ export class RetadorComponent {
   p: number = 1;
   count: number = 6;
   loading: boolean = false;
-  
+
   // Guardará el retador seleccionado para enviarlo al componente hijo modal
-  selectedRetador!: Retador | null; 
+  selectedRetador!: Retador | null;
   usuario: any;
 
   public ejecutandoSorteo: boolean = false;
-public ganadoresSorteo: any = null; // Guardará el objeto de respuesta { sorteoId, ganadores, etc }
-public pushNotificado: boolean = false;
+  public ganadoresSorteo: any = null; // Guardará el objeto de respuesta { sorteoId, ganadores, etc }
+  public pushNotificado: boolean = false;
+
+  info_dashboard = `
+  <p>En esta sección :</p>
+          <ul>
+            <li><strong>Monitorear la Tabla de Liderazgo:</strong> Visualiza la posición, el nombre del usuario, su avatar y correo electrónico para identificar a los participantes más activos.</li>
+  <li><strong>Verificar Identificación del Cliente:</strong> Revisa el documento de identidad registrado por cada participante para validar su cuenta en caso de resultar ganador.</li>
+  <li><strong>Monitorear Hábitos y Puntos:</strong> Consulta la cantidad de hábitos completados, el histórico de puntos totales acumulados y los puntos actuales disponibles del período.</li>
+  <li><strong>Validar el Estado del Sorteo:</strong> Comprueba el indicador visual para saber si el usuario está <span style="color:#28a745; font-weight:bold;">Clasificado</span> o si <span style="color:#dc3545; font-weight:bold;">Falta Puntos</span> para entrar al concurso.</li>
+  <li><strong>Gestionar Acciones por Usuario:</strong> Utiliza el botón de visualización en la columna de acciones para auditar a detalle el perfil o historial de un participante específico.</li>
+  <li><strong>Buscar y Filtrar Participantes:</strong> Usa la barra de búsqueda superior para localizar rápidamente a un retador por su nombre, teléfono o correo electrónico.</li>
+  <li><strong>Operar el Módulo de Sorteo Dinámico:</strong> Monitorea la regla activa del sistema (ej. 1 ganador por cada X participantes elegibles) basada en los usuarios clasificados.</li>
+  <li><strong>Ejecutar Ruleta de Ganadores:</strong> Haz clic en el botón verde "Ejecutar Ruleta" para realizar la selección aleatoria y automatizada de los ganadores de este período.</li>
+          </ul>`;
 
   constructor(
     private participantesService: GamificacionService,
@@ -94,42 +107,42 @@ public pushNotificado: boolean = false;
   }
 
   search(): void {
-  // CASO 1: Si el administrador borra el texto de la barra de búsqueda
-  if (!this.query || this.query.trim() === '') {
+    // CASO 1: Si el administrador borra el texto de la barra de búsqueda
+    if (!this.query || this.query.trim() === '') {
+      this.loading = true;
+
+      // Restauramos el ranking original ordenado por puntaje de mayor a menor
+      this.participantesService.obtenerTablaLiderazgo().subscribe({
+        next: (data) => {
+          this.retadores = data;
+          this.loading = false;
+          console.log('🔄 [BUSCADOR]: Barra limpia. Ranking de liderazgo restaurado.');
+        },
+        error: (err) => {
+          console.error('❌ Error al restaurar liderazgo:', err);
+          this.loading = false;
+        }
+      });
+      return;
+    }
+
+    // CASO 2: Sí hay un término escrito en el input de texto
     this.loading = true;
-    
-    // Restauramos el ranking original ordenado por puntaje de mayor a menor
-    this.participantesService.obtenerTablaLiderazgo().subscribe({
-      next: (data) => {
-        this.retadores = data; 
+
+    // 🟢 CONEXIÓN DIRECTA: Apunta a tu método unificado 'buscar' pasándole el tipo 'participantes'
+    this.busquedasService.buscar('participantes', this.query.trim()).subscribe({
+      next: (resultados: Retador[]) => {
+        // Tu .pipe(map) ya transformó la respuesta directamente en el arreglo limpio
+        this.retadores = resultados || [];
         this.loading = false;
-        console.log('🔄 [BUSCADOR]: Barra limpia. Ranking de liderazgo restaurado.');
+        console.log(`🔍 [BUSCADOR]: Se filtraron ${this.retadores.length} retadores con el término: "${this.query}"`);
       },
       error: (err) => {
-        console.error('❌ Error al restaurar liderazgo:', err);
+        console.error('❌ Error en la petición analítica de búsqueda:', err);
         this.loading = false;
       }
     });
-    return;
   }
-
-  // CASO 2: Sí hay un término escrito en el input de texto
-  this.loading = true;
-
-  // 🟢 CONEXIÓN DIRECTA: Apunta a tu método unificado 'buscar' pasándole el tipo 'participantes'
-  this.busquedasService.buscar('participantes', this.query.trim()).subscribe({
-    next: (resultados: Retador[]) => {
-      // Tu .pipe(map) ya transformó la respuesta directamente en el arreglo limpio
-      this.retadores = resultados || [];
-      this.loading = false;
-      console.log(`🔍 [BUSCADOR]: Se filtraron ${this.retadores.length} retadores con el término: "${this.query}"`);
-    },
-    error: (err) => {
-      console.error('❌ Error en la petición analítica de búsqueda:', err);
-      this.loading = false;
-    }
-  });
-}
 
 
   PageSize() {
@@ -141,71 +154,71 @@ public pushNotificado: boolean = false;
   /**
  * 🎲 Ejecuta la lógica matemática de la ruleta de Coggle (1 de cada 5)
  */
-lanzarSorteo() {
-  Swal.fire({
-    title: '¿Deseas iniciar el sorteo?',
-    text: "El sistema barajará de forma aleatoria pura a los participantes clasificados.",
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#2ecc71',
-    cancelButtonColor: '#858796',
-    confirmButtonText: '¡Sí, girar ruleta!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      this.ejecutandoSorteo = true;
-      this.ganadoresSorteo = null;
-      this.pushNotificado = false;
+  lanzarSorteo() {
+    Swal.fire({
+      title: '¿Deseas iniciar el sorteo?',
+      text: "El sistema barajará de forma aleatoria pura a los participantes clasificados.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#2ecc71',
+      cancelButtonColor: '#858796',
+      confirmButtonText: '¡Sí, girar ruleta!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.ejecutandoSorteo = true;
+        this.ganadoresSorteo = null;
+        this.pushNotificado = false;
 
-      this.participantesService.ejecutarSorteoProporcional().subscribe({
-        next: (resp) => {
-          if (resp.ok) {
-            this.ganadoresSorteo = resp.data;
+        this.participantesService.ejecutarSorteoProporcional().subscribe({
+          next: (resp) => {
+            if (resp.ok) {
+              this.ganadoresSorteo = resp.data;
+              this.ejecutandoSorteo = false;
+
+              Swal.fire({
+                icon: 'success',
+                title: '¡Sorteo Completado! 🏆',
+                text: `Se han seleccionado ${resp.data.cantidadGanadores} ganadores de ${resp.data.totalElegibles} elegibles.`,
+                timer: 3000,
+                showConfirmButton: false
+              });
+            }
+          },
+          error: (err) => {
+            console.error(err);
             this.ejecutandoSorteo = false;
-            
-            Swal.fire({
-              icon: 'success',
-              title: '¡Sorteo Completado! 🏆',
-              text: `Se han seleccionado ${resp.data.cantidadGanadores} ganadores de ${resp.data.totalElegibles} elegibles.`,
-              timer: 3000,
-              showConfirmButton: false
-            });
+            Swal.fire('Error', err.error?.msg || 'No se pudo procesar el sorteo. Verifica que existan usuarios clasificados (≥ 55 pts).', 'error');
           }
-        },
-        error: (err) => {
-          console.error(err);
-          this.ejecutandoSorteo = false;
-          Swal.fire('Error', err.error?.msg || 'No se pudo procesar el sorteo. Verifica que existan usuarios clasificados (≥ 55 pts).', 'error');
-        }
-      });
-    }
-  });
-}
-
-/**
- * 🎁 Botón CTA para notificar exclusivamente a los ganadores mediante WebPush
- */
-notificarGanadoresPush() {
-  if (!this.ganadoresSorteo?.sorteoId) return;
-
-  Swal.fire({
-    title: 'Enviando alertas...',
-    didOpen: () => { Swal.showLoading(); }
-  });
-
-  this.participantesService.notificarGanadores(this.ganadoresSorteo.sorteoId).subscribe({
-    next: (resp) => {
-      if (resp.ok) {
-        this.pushNotificado = true;
-        Swal.fire('¡Notificados! ⚡', 'Los banners push flotantes han sido enviados a las pantallas de los ganadores.', 'success');
+        });
       }
-    },
-    error: (err) => {
-      console.error(err);
-      Swal.fire('Error de despacho', 'No se pudieron enviar las notificaciones push.', 'error');
-    }
-  });
-}
+    });
+  }
 
-  
+  /**
+   * 🎁 Botón CTA para notificar exclusivamente a los ganadores mediante WebPush
+   */
+  notificarGanadoresPush() {
+    if (!this.ganadoresSorteo?.sorteoId) return;
+
+    Swal.fire({
+      title: 'Enviando alertas...',
+      didOpen: () => { Swal.showLoading(); }
+    });
+
+    this.participantesService.notificarGanadores(this.ganadoresSorteo.sorteoId).subscribe({
+      next: (resp) => {
+        if (resp.ok) {
+          this.pushNotificado = true;
+          Swal.fire('¡Notificados! ⚡', 'Los banners push flotantes han sido enviados a las pantallas de los ganadores.', 'success');
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire('Error de despacho', 'No se pudieron enviar las notificaciones push.', 'error');
+      }
+    });
+  }
+
+
 
 }

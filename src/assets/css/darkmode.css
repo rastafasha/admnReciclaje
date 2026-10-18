@@ -3,6 +3,11 @@
     color: var(--white);
 }
 
+.dark body{
+    background-color: var(--black);
+    color: var(--white);
+}
+
 .dark .sidebar-nav .nav-link {
     background-color: var(--black);
     color: var(--white);

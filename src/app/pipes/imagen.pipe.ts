@@ -12,7 +12,7 @@ export class ImagenPipe implements PipeTransform {
   transform(img: string | undefined | null, tipo: 'usuarios' | 'perfiles'): string {
     // 1. Si no viene ninguna imagen, retornamos el asset por defecto
     if (!img || img.trim() === '') {
-      return 'assets/images/default.jpeg';
+      return 'assets/images/no-image.jpg';
     } 
 
     // 2. 🛡️ FILTRO CRÍTICO: Si ya es una URL segura de Cloudinary, la retornamos intacta
