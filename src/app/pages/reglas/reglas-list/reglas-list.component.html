@@ -1,16 +1,17 @@
 <!-- =======| Main |======= -->
-<div class="container animated fadeInUp" id="main" class="main" role="main" name="users">
+<div class="container " id="main" class="main" role="main" name="users">
 
     <div class="col-xs-12">
 
         <app-backButtn [title]="title"></app-backButtn>
-        <button class="btn btn-outline-primary btn-sm rounded-circle shadow-sm"
+       
+        <div class="clear"></div>
+         <button class="btn btn-outline-primary btn-sm rounded-circle shadow-sm"
                       (click)="modalDashboard.open()" title="Ayuda de la sección">
                       <i class="fas fa-question"></i>
                     </button>
-        <div class="clear"></div>
 
-        <section class="section dashboard">
+        <section class="section dashboard animated fadeInUp">
             <!-- projects -->
             <div class="container-fluid py-4">
                 <!-- <div class="d-flex justify-content-between align-items-center mb-4">

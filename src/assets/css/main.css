@@ -11,6 +11,7 @@
 @import url("./dashboard.css");
 @import url("./cart.css");
 @import url('./spinners.css');
+
 .cursor {
     cursor: pointer;
 }
@@ -40,8 +41,8 @@
     --font-family: 'HelveticaNeueLTStd-Roman';
 }
 
-.profile-card .rounded-circle{
-  height:100px;
+.profile-card .rounded-circle {
+    height: 100px;
 }
 
 html body .b-r {
@@ -55,7 +56,7 @@ hr {
     border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
-a{
+a {
     color: var(--vinotinto);
 }
 
@@ -82,7 +83,7 @@ img.avatar {
     cursor: pointer;
 }
 
-.displaycomponentcss{
+.displaycomponentcss {
     display: none;
 }
 
@@ -209,17 +210,20 @@ img.avatar {
         justify-content: center;
         align-items: center;
     }
+
     .leftside {
         float: left;
-    display: flex;
-    width: 94%;
+        display: flex;
+        width: 99%;
     }
+
     .leftside .pagetitle {
         display: flex;
         flex-direction: column;
         width: 70%;
         float: left;
     }
+
     .buton {
         width: 30%;
         display: flex;
@@ -229,6 +233,7 @@ img.avatar {
         align-items: end;
         justify-content: end;
     }
+
     .buton .btn {
         float: right;
         right: 0;
@@ -244,11 +249,13 @@ img.avatar {
         display: flex;
         flex-direction: row;
     }
+
     .leftside {
         float: left;
         display: flex;
         width: 80%;
     }
+
     .buton {
         display: flex;
         float: left;
@@ -263,11 +270,13 @@ img.avatar {
         flex-direction: column;
         justify-content: space-between;
     }
+
     .leftside {
         float: left;
         display: flex;
         width: 73%;
     }
+
     .buton {
         display: flex;
         float: left;
@@ -282,11 +291,13 @@ img.avatar {
         flex-direction: column;
         justify-content: space-between;
     }
+
     .leftside {
         float: left;
         display: flex;
         width: 79%;
     }
+
     .buton {
         display: flex;
         float: left;
@@ -295,7 +306,7 @@ img.avatar {
     }
 }
 
-@media (min-width: 768px) and (max-width:1170px){
+@media (min-width: 768px) and (max-width:1170px) {
     .mini-sidebar .page-wrapper {
         margin-left: 130px;
     }
@@ -304,4 +315,3 @@ img.avatar {
         width: 130px;
     }
 }
-

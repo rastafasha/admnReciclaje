@@ -1,14 +1,16 @@
-<div class="container animated fadeInUp" id="main" class="main" role="main" name="users">
+<div class="container " id="main" class="main" role="main" name="users">
 
     <div class="col-xs-12">
         <app-backButtn [displaycomponent]="displaycomponent" [title]="'Tabla de Liderazgo - Retadores'"></app-backButtn>
-        <button class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" (click)="modalDashboard.open()"
+       
+        <div class="clear"></div>
+
+         <button class="btn btn-outline-primary btn-sm rounded-circle shadow-sm" (click)="modalDashboard.open()"
             title="Ayuda de la sección">
             <i class="fas fa-question"></i>
         </button>
-        <div class="clear"></div>
-        <p class="text-muted small mb-0">Gestión de posiciones y clasificados al sorteo</p>
-        <section class="section dashboard">
+        <p class="text-muted small mb-2 mt-2 animated fadeInUp">Gestión de posiciones y clasificados al sorteo</p>
+        <section class="section dashboard animated fadeInUp">
             <div class="row">
                 <div class="col-xs-12">
                     <!-- buscador -->

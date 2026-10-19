@@ -115,4 +115,47 @@
   border-width: 2px;
   font-weight: bold;
   margin-right: 5px;
+
+   transition-property: transform, opacity;
+    transition-duration: .2s;
+    transition-delay:calc(sibling-index() * .3s);
+
+    opacity:1;
+    transform:scale(1);
+
+    @starting-style{
+        opacity:0;
+        transform:scale(1.5)
+    }
+}
+
+
+
+.pagetitle h1, .pagetitle p
+  {
+    transition-property: transform, opacity;
+    transition-duration: .3s;
+    transition-delay:calc(sibling-index() * .3s);
+
+    opacity:1;
+    transform:translateY(0px);
+
+    @starting-style{
+        opacity:0;
+        transform:translateX(-6px)
+    }
+}
+.breadcrumb li
+  {
+    transition-property: transform, opacity;
+    transition-duration: .3s;
+    transition-delay:calc(sibling-index() * .5s);
+
+    opacity:1;
+    transform:translateY(0px);
+
+    @starting-style{
+        opacity:0;
+        transform:translateX(-6px)
+    }
 }

@@ -1,3 +1,20 @@
 .hide-menu {
     display: none;
 }
+
+.sidebar-nav .nav-link, .sidebar-nav ul li
+  {
+    transition-property: transform, opacity;
+    transition-duration: .2s;
+    transition-delay:calc(sibling-index() * .2s);
+
+    /* color:currentColor; */
+    opacity:1;
+    transform:translateY(0px);
+
+    @starting-style{
+        opacity:0;
+        transform:translateX(-6px);
+    }
+}
+ 

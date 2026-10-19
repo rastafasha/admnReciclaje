@@ -89,7 +89,7 @@
 }
 
 .sidebar-nav .nav-link {
-    background: transparent !important;
+    /* background: transparent !important; */
 }
 
 .dark .nav-tabs-bordered .nav-link.active {

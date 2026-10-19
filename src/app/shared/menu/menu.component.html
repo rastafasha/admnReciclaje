@@ -5,114 +5,75 @@
     <!-- Sidebar scroll-->
     <div class="scroll-sidebar">
         <!-- Sidebar navigation-->
-        <nav class="sidebar-nav">
-            <ul id="sidebar-nav">
+        <nav class="sidebar-nav ">
+            <ul id="sidebar-nav ">
                 <li class="nav-item">
                     <a class="nav-link collapsed cursor" routerLink="/">
                         <i class="fa fa-home"></i>
                         <span>Inicio</span>
                     </a>
                 </li>
-                <!-- End Dashboard Nav -->
 
-                <!-- menu superadmin y admin -->
-
-                <div *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'PARTNER' ">
-
-                    <!-- <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/buscar" routerLinkActive="active">
-                            <i class="fa fa-search"></i>
-                            <span>Buscar</span>
-                        </a>
-                    </li> -->
-                   
-                    
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/retadores" routerLinkActive="active">
-                            <i class="fa fa-users"></i>
-                            <span>Retadores</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/auditoria-ia" routerLinkActive="active">
-                            <i class="fa-solid fa-robot"></i>
-                            <span>Auditoria IA</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/tips" routerLinkActive="active">
-                            <i class="fa-solid fa-lightbulb"></i>
-                            <span>Consejos</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/reglas" routerLinkActive="active">
-                            <i class="fa-regular fa-file-lines"></i>
-                            <span>Reglas</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/terminos" routerLinkActive="active">
-                            <i class="fa-solid fa-scale-balanced"></i>
-                            <span>Terminos</span>
-                        </a>
-                    </li>
-                    
-                    
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/users" routerLinkActive="active">
-                            <i class="fa-solid fa-users-gear"></i>
-                            <span>Usuarios</span>
-                        </a>
-                    </li>
-                    
-                    
-                    
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" [routerLink]="['/dashboard/profile/', user.uid]" routerLinkActive="active">
-                            <i class="fa fa-user"></i>
-                            <span>Mi Cuenta</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" routerLink="/dashboard/roles" routerLinkActive="active">
-                            <i class="fa fa-cogs"> </i>
-                            <span>Roles</span>
-                        </a>
-                    </li>
-                    <!-- End Payments Page Nav -->
-                </div>
-
-                <!-- menu superadmin y admin -->
-
-
-                <div *ngIf="user.role === 'USER' ">
-                    <li class="nav-item">
-                        <a class="nav-link collapsed cursor" [routerLink]="['/dashboard/profile/', user.uid]" routerLinkActive="active">
-                            <i class="fa fa-user-md"></i>
-                            <span>Mi Cuenta</span>
-                        </a>
-                    </li>
-                    
-                    <!-- End Payments Page Nav -->
-                </div>
-
-                <!-- End Payments Page Nav -->
-                <!-- todos -->
-                <!-- <li class="nav-item">
-                    <a class="nav-link collapsed cursor" routerLink="/dashboard/help" routerLinkActive="active">
-                        <i class="fa fa-ambulance"></i>
-                        <span>Ayuda</span>
+                <li class="nav-item"
+                    *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'EDITOR' ">
+                    <a class="nav-link collapsed cursor" routerLink="/dashboard/retadores" routerLinkActive="active">
+                        <i class="fa fa-users"></i>
+                        <span>Retadores</span>
                     </a>
-                </li> -->
-                <!-- End F.A.Q Page Nav -->
-
-                <!-- <li class="nav-item">
-                    <a class="nav-link collapsed cursor" routerLink="/dashboard/contact" routerLinkActive="active">
-                        <i class="fa fa-envelope"></i>
-                        <span>Contacto</span>
+                </li>
+                <li class="nav-item"
+                    *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'EDITOR' ">
+                    <a class="nav-link collapsed cursor" routerLink="/dashboard/auditoria-ia" routerLinkActive="active">
+                        <i class="fa-solid fa-robot"></i>
+                        <span>Auditoria IA</span>
                     </a>
-                </li> -->
+                </li>
+                <li class="nav-item"
+                    *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'EDITOR' ">
+                    <a class="nav-link collapsed cursor" routerLink="/dashboard/tips" routerLinkActive="active">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        <span>Consejos</span>
+                    </a>
+                </li>
+                <li class="nav-item"
+                    *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'EDITOR' ">
+                    <a class="nav-link collapsed cursor" routerLink="/dashboard/reglas" routerLinkActive="active">
+                        <i class="fa-regular fa-file-lines"></i>
+                        <span>Reglas</span>
+                    </a>
+                </li>
+                <li class="nav-item"
+                    *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'EDITOR' ">
+                    <a class="nav-link collapsed cursor" routerLink="/dashboard/terminos" routerLinkActive="active">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                        <span>Terminos</span>
+                    </a>
+                </li>
+
+
+                <li class="nav-item"
+                    *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'EDITOR' ">
+                    <a class="nav-link collapsed cursor" routerLink="/dashboard/users" routerLinkActive="active">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+
+                <li class="nav-item"
+                    *ngIf="user.role === 'SUPERADMIN' || user.role === 'ADMIN' || user.role === 'EDITOR' ">
+                    <a class="nav-link collapsed cursor" routerLink="/dashboard/roles" routerLinkActive="active">
+                        <i class="fa fa-cogs"> </i>
+                        <span>Roles</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link collapsed cursor" [routerLink]="['/dashboard/profile/', user.uid]"
+                        routerLinkActive="active">
+                        <i class="fa fa-user"></i>
+                        <span>Mi Cuenta</span>
+                    </a>
+                </li>
 
                 <li class="nav-item">
                     <a class="nav-link collapsed cursor" (click)="logout()">
@@ -120,8 +81,6 @@
                         <span>Salir</span>
                     </a>
                 </li>
-                <!-- End Contact Page Nav -->
-
 
             </ul>
         </nav>

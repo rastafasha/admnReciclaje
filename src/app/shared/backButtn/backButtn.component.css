@@ -1,0 +1,42 @@
+.pagetitle h1
+  {
+    transition-property: transform, opacity;
+    transition-duration: .3s;
+    transition-delay:calc(sibling-index() * .3s);
+
+    opacity:1;
+    transform:translateY(0px);
+
+    @starting-style{
+        opacity:0;
+        transform:translateX(-6px)
+    }
+}
+.breadcrumb li
+  {
+    transition-property: transform, opacity;
+    transition-duration: .3s;
+    transition-delay:calc(sibling-index() * .5s);
+
+    opacity:1;
+    transform:translateY(0px);
+
+    @starting-style{
+        opacity:0;
+        transform:translateX(-6px)
+    }
+}
+.buton 
+  {
+    transition-property: transform, opacity;
+    transition-duration: .3s;
+    transition-delay:calc(sibling-index() * .5s);
+
+    opacity:1;
+    transform:translateY(0px);
+
+    @starting-style{
+        opacity:0;
+        transform:translateX(-6px)
+    }
+}
